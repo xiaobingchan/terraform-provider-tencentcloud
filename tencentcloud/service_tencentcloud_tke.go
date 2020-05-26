@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tke "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -413,7 +413,7 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 }
 
 /*
-	if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
+	if cluster is creating, return error:TceCloudSDKError] Code=InternalError.ClusterState
 */
 func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, instanceIds []string) (errRet error) {
 	logId := getLogId(ctx)

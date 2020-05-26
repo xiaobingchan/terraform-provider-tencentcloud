@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/pkg/errors"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 )
 
 func TestAccTencentCloudHaVip_basic(t *testing.T) {
@@ -82,7 +82,7 @@ func testAccCheckHaVipDestroy(s *terraform.State) error {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeHaVips(request)
 			if e != nil {
-				ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+				ee, ok := e.(*sdkErrors.TceCloudSDKError)
 				if !ok {
 					return retryError(errors.WithStack(e))
 				}
@@ -99,7 +99,7 @@ func testAccCheckHaVipDestroy(s *terraform.State) error {
 		})
 		if err != nil {
 			log.Printf("[CRITAL]%s read HA VIP failed, reason:%+v", logId, err)
-			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+			ee, ok := err.(*sdkErrors.TceCloudSDKError)
 			if !ok {
 				return err
 			}

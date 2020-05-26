@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -5,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	dc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dc/v20180410"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )

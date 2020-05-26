@@ -20,7 +20,7 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
 )
 
 func dataSourceTencentCloudSecurityGroup() *schema.Resource {

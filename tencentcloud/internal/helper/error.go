@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"strings"
 
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 type frame struct {
@@ -101,13 +101,13 @@ func (e Error) error() string {
 	return sb.String()
 }
 
-// if cause is *sdkErrors.TencentCloudSDKError, will use sdk error request-id
+// if cause is *sdkErrors.TceCloudSDKError, will use sdk error request-id
 func WrapErrorf(cause error, id, requestId, msg string, args ...interface{}) error {
 	if cause == nil {
 		return nil
 	}
 
-	if sdkErr, ok := cause.(*sdkErrors.TencentCloudSDKError); ok && requestId == "" {
+	if sdkErr, ok := cause.(*sdkErrors.TceCloudSDKError); ok && requestId == "" {
 		requestId = sdkErr.RequestId
 	}
 
@@ -128,7 +128,7 @@ func WrapError(cause error, id, requestId string) error {
 		return nil
 	}
 
-	if sdkErr, ok := cause.(*sdkErrors.TencentCloudSDKError); ok && requestId == "" {
+	if sdkErr, ok := cause.(*sdkErrors.TceCloudSDKError); ok && requestId == "" {
 		requestId = sdkErr.RequestId
 	}
 

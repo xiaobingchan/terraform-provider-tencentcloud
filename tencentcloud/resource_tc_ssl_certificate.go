@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a SSL certificate.
 
@@ -30,7 +32,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+	ssl "github.com/tencentyun/tcecloud-sdk-go/tcecloud/wss/v20180426"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

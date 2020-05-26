@@ -44,9 +44,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -457,7 +457,7 @@ func resourceTencentCloudContainerClusterCreate(d *schema.ResourceData, meta int
 	d.SetId(id)
 	err = resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
 		_, _, err = service.DescribeClusterInstances(ctx, d.Id())
-		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+		if e, ok := err.(*errors.TceCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
@@ -519,7 +519,7 @@ func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, meta inter
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		var e error
 		_, workers, e = service.DescribeClusterInstances(ctx, info.ClusterId)
-		if e, ok := e.(*errors.TencentCloudSDKError); ok {
+		if e, ok := e.(*errors.TceCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
 				d.SetId("")
 				return nil

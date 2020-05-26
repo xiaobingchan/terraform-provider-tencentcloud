@@ -54,7 +54,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func resourceTencentCloudTkeScaleWorker() *schema.Resource {
@@ -247,7 +247,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}
@@ -346,7 +346,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}
@@ -379,7 +379,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 		err = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
 			err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
 
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}

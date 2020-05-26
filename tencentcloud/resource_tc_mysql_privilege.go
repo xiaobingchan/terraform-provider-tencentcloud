@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 
@@ -69,8 +71,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -440,7 +442,7 @@ func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interfa
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		accountInfos, err := mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
 		if err != nil {
-			if sdkerr, ok := err.(*sdkError.TencentCloudSDKError); ok && sdkerr.GetCode() == "InvalidParameter" &&
+			if sdkerr, ok := err.(*sdkError.TceCloudSDKError); ok && sdkerr.GetCode() == "InvalidParameter" &&
 				strings.Contains(sdkerr.GetMessage(), "instance not found") {
 				d.SetId("")
 				onlineHas = false
@@ -480,7 +482,7 @@ func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interfa
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == MysqlInstanceIdNotFound {
 					onlineHas = false
 				}

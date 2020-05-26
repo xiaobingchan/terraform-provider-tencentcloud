@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to get information about a MySQL instance.
 
@@ -17,7 +19,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

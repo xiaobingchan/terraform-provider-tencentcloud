@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create tcaplus application
 
@@ -37,7 +39,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func resourceTencentCloudTcaplusApplication() *schema.Resource {
@@ -271,9 +273,9 @@ func resourceTencentCloudTcaplusApplicationUpdate(d *schema.ResourceData, meta i
 				newPwd.(string),
 				int64(d.Get("old_password_expire_last").(int)))
 
-			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkerr, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkerr.Code == "FailedOperation.OldPasswordInUse" {
-					err = fmt.Errorf("[TencentCloudSDKError] Code=FailedOperation.OldPasswordInUse,`password_status` is unmodifiable now, can modify after `old_password_expire_time`")
+					err = fmt.Errorf("[TceCloudSDKError] Code=FailedOperation.OldPasswordInUse,`password_status` is unmodifiable now, can modify after `old_password_expire_time`")
 					return resource.NonRetryableError(err)
 				}
 			}

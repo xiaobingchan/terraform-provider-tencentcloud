@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a HA VIP.
 
@@ -29,8 +31,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -230,7 +232,7 @@ func resourceTencentCloudHaVipDelete(d *schema.ResourceData, meta interface{}) e
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(statRequest)
 		if e != nil {
-			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+			ee, ok := e.(*sdkErrors.TceCloudSDKError)
 			if !ok {
 				return retryError(errors.WithStack(ee))
 			}

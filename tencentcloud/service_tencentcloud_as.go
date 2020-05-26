@@ -6,8 +6,8 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	as "github.com/tencentyun/tcecloud-sdk-go/tcecloud/as/v20180419"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -421,7 +421,7 @@ func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledA
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeScheduledActions(request)
 	if err != nil {
-		sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+		sdkErr, ok := err.(*sdkErrors.TceCloudSDKError)
 		if ok && sdkErr.Code == AsScheduleNotFound {
 			has = 0
 			return

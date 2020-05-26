@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to creating dedicated tunnels instances.
 

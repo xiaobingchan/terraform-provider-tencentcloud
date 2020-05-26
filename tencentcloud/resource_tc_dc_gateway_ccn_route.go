@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to creating direct connect gateway route entry.
 

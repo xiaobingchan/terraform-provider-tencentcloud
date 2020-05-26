@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -9,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	clb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/clb/v20180317"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -97,7 +99,7 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteLoadBalancer(request)
 	if err != nil {
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return nil
 			}
@@ -123,7 +125,7 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -170,7 +172,7 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -248,7 +250,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -301,7 +303,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -366,7 +368,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -395,7 +397,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 
 	if aErr != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := aErr.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := aErr.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -443,7 +445,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -471,7 +473,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 
 	if aErr != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := aErr.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := aErr.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}
@@ -506,7 +508,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
 	if err != nil {
-		ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+		ee, ok := err.(*sdkErrors.TceCloudSDKError)
 		if ok && ee.GetCode() == "InvalidParameter" {
 			return nil
 		}
@@ -544,7 +546,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	response, err := me.client.UseClbClient().DescribeRewrite(request)
 	if err != nil {
 		//in case that the lb is not exist, return empty
-		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if e, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return
 			}

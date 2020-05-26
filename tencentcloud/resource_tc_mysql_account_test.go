@@ -8,8 +8,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
@@ -52,7 +52,7 @@ func testAccCheckMysqlAccountExists(r string) resource.TestCheckFunc {
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			accountInfos, inErr = mysqlService.DescribeAccounts(ctx, split[0])
 			if inErr != nil {
-				sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError)
+				sdkErr, ok := inErr.(*sdkError.TceCloudSDKError)
 				if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 					return resource.NonRetryableError(fmt.Errorf("mysql account %s is not found", rs.Primary.ID))
 				}
@@ -97,7 +97,7 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			accountInfos, inErr = mysqlService.DescribeAccounts(ctx, split[0])
 			if inErr != nil {
-				sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError)
+				sdkErr, ok := inErr.(*sdkError.TceCloudSDKError)
 				if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 					return nil
 				}

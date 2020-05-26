@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a forward domain of layer7 listener.
 

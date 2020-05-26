@@ -9,8 +9,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
@@ -71,7 +71,7 @@ func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, inErr = mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, privilegeId.AccountHost, []string{"test"})
 			if inErr != nil {
-				if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr, ok := inErr.(*sdkError.TceCloudSDKError); ok {
 					if sdkErr.Code == MysqlInstanceIdNotFound {
 						return resource.NonRetryableError(fmt.Errorf("privilege not exists in mysql"))
 					}
@@ -95,7 +95,7 @@ func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			accountInfos, inErr = mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
 			if inErr != nil {
-				sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError)
+				sdkErr, ok := inErr.(*sdkError.TceCloudSDKError)
 				if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 					return resource.NonRetryableError(fmt.Errorf("mysql account %s is not found", rs.Primary.ID))
 				}
@@ -144,7 +144,7 @@ func testAccMysqlAccountPrivilegeDestroy(s *terraform.State) error {
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			privileges, inErr = mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, privilegeId.AccountHost, []string{"test"})
 			if inErr != nil {
-				if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr, ok := inErr.(*sdkError.TceCloudSDKError); ok {
 					if sdkErr.Code == MysqlInstanceIdNotFound {
 						return nil
 					}

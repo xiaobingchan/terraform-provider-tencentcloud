@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a mysql instance resource to create read-only database instances.
 
@@ -32,8 +34,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
@@ -153,7 +155,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		can, err := monitor.CheckCanCreateMysqlROInstance(ctx, masterInstanceId)
 
 		if err != nil {
-			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
+			sdkErr, ok := err.(*sdkError.TceCloudSDKError)
 			if ok {
 				if sdkErr.Code == "InvalidParameterValue" && strings.Contains(sdkErr.Message, "No objects found") {
 					return nil
@@ -306,7 +308,7 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {
-			if _, ok := err.(*sdkError.TencentCloudSDKError); !ok {
+			if _, ok := err.(*sdkError.TceCloudSDKError); !ok {
 				return resource.RetryableError(err)
 			} else {
 				return resource.NonRetryableError(err)

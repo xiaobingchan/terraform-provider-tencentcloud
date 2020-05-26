@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provide a resource to custom error page info for a GAAP HTTP domain.
 

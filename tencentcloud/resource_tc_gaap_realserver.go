@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a GAAP realserver.
 
@@ -31,7 +33,7 @@ import (
 	"net"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	gaap "github.com/tencentyun/tcecloud-sdk-go/tcecloud/gaap/v20180529"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

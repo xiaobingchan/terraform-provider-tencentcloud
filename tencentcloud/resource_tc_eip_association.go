@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides an eip resource associated with other resource like CVM, ENI and CLB.
 
@@ -32,7 +34,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 

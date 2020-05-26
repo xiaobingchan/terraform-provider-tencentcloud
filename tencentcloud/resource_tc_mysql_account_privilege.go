@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 
@@ -27,8 +29,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 type resourceTencentCloudMysqlAccountPrivilegeId struct {
@@ -177,7 +179,7 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 			dbNames)
 
 		if e != nil {
-			if sdkErr, ok := e.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := e.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == MysqlInstanceIdNotFound {
 					onlineHas = false
 				}

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides an tencentcloud application load balancer servers attachment as a resource, to attach and detach instances from load balancer.
 
@@ -38,7 +40,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	clb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/clb/v20180317"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

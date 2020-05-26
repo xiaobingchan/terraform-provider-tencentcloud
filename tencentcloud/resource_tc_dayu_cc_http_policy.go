@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create a dayu CC self-define http policy
 
@@ -76,8 +78,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	//sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	//sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 )
 
 func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {

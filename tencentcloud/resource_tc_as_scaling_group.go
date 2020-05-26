@@ -47,8 +47,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	as "github.com/tencentyun/tcecloud-sdk-go/tcecloud/as/v20180419"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -651,7 +651,7 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 
 	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
 		if errRet := asService.DeleteScalingGroup(ctx, scalingGroupId); errRet != nil {
-			if sdkErr, ok := errRet.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkErr, ok := errRet.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkErr.Code == AsScalingGroupNotFound {
 					return nil
 				} else if sdkErr.Code == AsScalingGroupInProgress || sdkErr.Code == AsScalingGroupInstanceInGroup {

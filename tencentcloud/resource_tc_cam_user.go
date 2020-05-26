@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to manage CAM user.
 
@@ -37,8 +39,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -193,7 +195,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := e.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				if strings.Contains(errCode, "SubUserNameInUse") {
 					return resource.NonRetryableError(e)

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provide a resource to create a Mongodb sharding instance.
 
@@ -39,7 +41,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
+	mongodb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/mongodb/v20180408"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

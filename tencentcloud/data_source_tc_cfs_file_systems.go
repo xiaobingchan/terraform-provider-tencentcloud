@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query the detail information of cloud file systems(CFS).
 
@@ -19,7 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	cfs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cfs/v20190719"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

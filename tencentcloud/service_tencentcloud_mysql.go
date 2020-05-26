@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -6,8 +8,8 @@ import (
 	"log"
 	"time"
 
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -24,7 +26,7 @@ func (me *MysqlService) NotFoundMysqlInstance(err error) bool {
 		return false
 	}
 
-	sdkErr, ok := err.(*errors.TencentCloudSDKError)
+	sdkErr, ok := err.(*errors.TceCloudSDKError)
 
 	if ok {
 		if sdkErr.Code == MysqlInstanceIdNotFound || sdkErr.Code == MysqlInstanceIdNotFound2 {
@@ -275,7 +277,7 @@ func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId 
 	caresKv = make(map[string]interface{})
 	parameterList, err := me.DescribeInstanceParameters(ctx, instanceId)
 	if err != nil {
-		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		sdkErr, ok := err.(*errors.TceCloudSDKError)
 		if ok && sdkErr.Code == "CdbError" {
 			return
 		}
@@ -501,18 +503,18 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 	// Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
 	status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
 	if errRet != nil {
-		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := errRet.(*errors.TceCloudSDKError); !ok {
 			status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
 		}
 	}
 	if errRet != nil {
-		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := errRet.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(2 * time.Second)
 			status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
 		}
 	}
 	if errRet != nil {
-		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := errRet.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(5 * time.Second)
 			status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
 		}
@@ -633,19 +635,19 @@ func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId stri
 	mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
 
 	if errRet != nil {
-		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := errRet.(*errors.TceCloudSDKError); !ok {
 			mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
 		}
 	}
 	if errRet != nil {
-		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := errRet.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(3 * time.Second)
 			mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
 
 		}
 	}
 	if errRet != nil {
-		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := errRet.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(5 * time.Second)
 			mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
 		}
@@ -774,7 +776,7 @@ func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (op
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBInstanceGTID(request)
 	if err != nil {
-		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		sdkErr, ok := err.(*errors.TceCloudSDKError)
 		if ok && sdkErr.Code == "CdbError" {
 			open = 0
 			return

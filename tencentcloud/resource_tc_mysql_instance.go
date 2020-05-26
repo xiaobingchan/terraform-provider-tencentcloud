@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a mysql instance resource to create master database instances.
 
@@ -46,8 +48,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
@@ -578,7 +580,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*errors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)
@@ -653,7 +655,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
-		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		sdkErr, ok := err.(*errors.TceCloudSDKError)
 		if ok {
 			if sdkErr.Code == MysqlInstanceIdNotFound3 {
 				mysqlInfo = nil
@@ -868,7 +870,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*errors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)
@@ -1032,7 +1034,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 				if err != nil {
-					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					if _, ok := err.(*errors.TceCloudSDKError); !ok {
 						return resource.RetryableError(err)
 					} else {
 						return resource.NonRetryableError(err)
@@ -1077,7 +1079,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*errors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)
@@ -1116,7 +1118,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*errors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)
@@ -1221,7 +1223,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {
-			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			if _, ok := err.(*errors.TceCloudSDKError); !ok {
 				return resource.RetryableError(err)
 			} else {
 				return resource.NonRetryableError(err)
@@ -1255,7 +1257,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeIsolatedDBInstanceById(ctx, d.Id())
 		if err != nil {
-			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			if _, ok := err.(*errors.TceCloudSDKError); !ok {
 				return resource.RetryableError(err)
 			} else {
 				return resource.NonRetryableError(err)

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -5,8 +7,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -261,7 +263,7 @@ getMoreData:
 	response, err := me.client.UseVpcClient().DescribeDirectConnectGatewayCcnRoutes(request)
 
 	if err != nil {
-		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*errors.TceCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
 				return
 			}

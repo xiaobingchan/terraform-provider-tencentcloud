@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -10,8 +12,8 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	tcaplusdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tcaplusdb/v20190823"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -84,7 +86,7 @@ func (me *TcaplusService) DescribeApps(ctx context.Context, applicationId string
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseTcaplusClient().DescribeClusters(request)
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == "ResourceNotFound" {
 					errRet = nil
 					return
@@ -117,7 +119,7 @@ func (me *TcaplusService) DescribeApp(ctx context.Context, applicationId string)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().DescribeClusters(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
 				errRet = nil
 				return
@@ -338,7 +340,7 @@ func (me *TcaplusService) DescribeZones(ctx context.Context, applicationId strin
 		response, err := me.client.UseTcaplusClient().DescribeTableGroups(request)
 
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == "ResourceNotFound" {
 					errRet = nil
 					return
@@ -381,7 +383,7 @@ func (me *TcaplusService) DescribeZone(ctx context.Context, applicationId string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().DescribeTableGroups(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
 				errRet = nil
 				return
@@ -527,7 +529,7 @@ func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().VerifyIdlFiles(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
 				errRet = nil
 				return
@@ -731,7 +733,7 @@ func (me *TcaplusService) DescribeTables(ctx context.Context, applicationId stri
 		response, err := me.client.UseTcaplusClient().DescribeTables(request)
 
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == "ResourceNotFound" {
 					errRet = nil
 					return
@@ -773,7 +775,7 @@ func (me *TcaplusService) DescribeTable(ctx context.Context, applicationId, tabl
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().DescribeTables(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
 				errRet = nil
 				return

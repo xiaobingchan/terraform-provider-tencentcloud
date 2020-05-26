@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create dayu DDoS policy
 
@@ -76,7 +78,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 )
 
 func resourceTencentCloudDayuDdosPolicy() *schema.Resource {

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -9,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -163,7 +165,7 @@ func (me *CamService) DescribeRolePolicyAttachmentById(ctx context.Context, role
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist" {
@@ -213,7 +215,7 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist" {
@@ -305,7 +307,7 @@ func (me *CamService) DescribeUserPolicyAttachmentById(ctx context.Context, user
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -363,7 +365,7 @@ func (me *CamService) DescribeUserPolicyAttachmentsByFilter(ctx context.Context,
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -492,7 +494,7 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -547,7 +549,7 @@ func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -660,7 +662,7 @@ func (me *CamService) DescribePolicyById(ctx context.Context, policyId string) (
 
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			errCode := ee.GetCode()
 			//check if read empty
 			if strings.Contains(errCode, "ResourceNotFound") {
@@ -715,7 +717,7 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 		response, err := me.client.UseCamClient().ListPolicies(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -770,7 +772,7 @@ func (me *CamService) DescribeUserById(ctx context.Context, userId string) (resp
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			errCode := ee.GetCode()
 			//check if read empty
 			if strings.Contains(errCode, "ResourceNotFound") {
@@ -796,7 +798,7 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			errCode := ee.GetCode()
 			//check if read empty
 			if strings.Contains(errCode, "ResourceNotFound") {
@@ -899,7 +901,7 @@ func (me *CamService) DescribeGroupById(ctx context.Context, groupId string) (ca
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			errCode := ee.GetCode()
 			//check if read empty
 			if strings.Contains(errCode, "ResourceNotFound") {
@@ -929,7 +931,7 @@ func (me *CamService) DescribeGroupsByFilter(ctx context.Context, params map[str
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -991,7 +993,7 @@ func (me *CamService) DescribeGroupMembershipById(ctx context.Context, groupId s
 		response, err := me.client.UseCamClient().ListUsersForGroup(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s read CAM group membership failed, reason:%s\n", logId, err.Error())
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "ResourceNotFound") {
@@ -1025,7 +1027,7 @@ func (me *CamService) DescribeSAMLProviderById(ctx context.Context, providerName
 
 	if err != nil {
 		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n", logId, err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			errCode := ee.GetCode()
 			//check if read empty
 			if strings.Contains(errCode, "ResourceNotFound") {
@@ -1062,7 +1064,7 @@ func (me *CamService) DescribeSAMLProvidersByFilter(ctx context.Context, params 
 	response, err := me.client.UseCamClient().ListSAMLProviders(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if ee, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			errCode := ee.GetCode()
 			//check if read empty
 			if strings.Contains(errCode, "ResourceNotFound") {

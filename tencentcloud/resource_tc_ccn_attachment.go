@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a CCN attaching resource.
 

@@ -8,28 +8,31 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
-	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
-	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
-	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
-	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
-	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
-	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
-	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
-	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
-	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
-	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
-	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+	as "github.com/tencentyun/tcecloud-sdk-go/tcecloud/as/v20180419"
+
+	//cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
+	cbs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cbs/v20170312"
+	//cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	//cdn "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdn/v20180606"
+	cfs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cfs/v20190719"
+	clb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/clb/v20180317"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/profile"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
+
+	//dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
+	dc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dc/v20180410"
+	//gaap "github.com/tencentyun/tcecloud-sdk-go/tcecloud/gaap/v20180529"
+	//mongodb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/mongodb/v20180408"
+	monitor "github.com/tencentyun/tcecloud-sdk-go/tcecloud/monitor/v20180724"
+	redis "github.com/tencentyun/tcecloud-sdk-go/tcecloud/redis/v20180412"
+
+	//scf "github.com/tencentyun/tcecloud-sdk-go/tcecloud/scf/v20180416"
+	//tag "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tag/v20180813"
+	//tcaplusdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tcaplusdb/v20190823"
+	tke "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tke/v20180525"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
+	//ssl "github.com/tencentyun/tcecloud-sdk-go/tcecloud/wss/v20180426"
 )
 
 // TencentCloudClient is client for all TencentCloud service
@@ -37,26 +40,26 @@ type TencentCloudClient struct {
 	Region     string
 	Credential *common.Credential
 
-	cosConn     *s3.S3
-	mysqlConn   *cdb.Client
-	redisConn   *redis.Client
-	asConn      *as.Client
-	vpcConn     *vpc.Client
-	cbsConn     *cbs.Client
-	cvmConn     *cvm.Client
-	clbConn     *clb.Client
-	dayuConn    *dayu.Client
-	dcConn      *dc.Client
-	tagConn     *tag.Client
-	mongodbConn *mongodb.Client
-	tkeConn     *tke.Client
-	camConn     *cam.Client
-	gaapConn    *gaap.Client
-	sslConn     *ssl.Client
-	cfsConn     *cfs.Client
-	scfConn     *scf.Client
-	tcaplusConn *tcaplusdb.Client
-	cdnConn     *cdn.Client
+	cosConn *s3.S3
+	//mysqlConn   *cdb.Client
+	redisConn *redis.Client
+	asConn    *as.Client
+	vpcConn   *vpc.Client
+	cbsConn   *cbs.Client
+	cvmConn   *cvm.Client
+	clbConn   *clb.Client
+	//dayuConn    *dayu.Client
+	dcConn *dc.Client
+	//tagConn *tag.Client
+	//mongodbConn *mongodb.Client
+	tkeConn *tke.Client
+	//camConn     *cam.Client
+	//gaapConn    *gaap.Client
+	//sslConn     *ssl.Client
+	cfsConn *cfs.Client
+	//scfConn     *scf.Client
+	//tcaplusConn *tcaplusdb.Client
+	//cdnConn     *cdn.Client
 	monitorConn *monitor.Client
 }
 
@@ -81,7 +84,7 @@ func newTencentCloudClientProfile(timeout int) *profile.ClientProfile {
 	// request timeout
 	cpf.HttpProfile.ReqTimeout = timeout
 	// default language
-	cpf.Language = "en-US"
+	//cpf.Language = "en-US"
 
 	return cpf
 }
@@ -112,6 +115,7 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 	return s3.New(sess)
 }
 
+/*
 // UseMysqlClient returns mysql(cdb) client for service
 func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	if me.mysqlConn != nil {
@@ -124,7 +128,7 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 
 	return me.mysqlConn
 }
-
+*/
 // UseRedisClient returns redis client for service
 func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	if me.redisConn != nil {
@@ -190,6 +194,7 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 	return me.dcConn
 }
 
+/*
 // UseMongodbClient returns mongodb client for service
 func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 	if me.mongodbConn != nil {
@@ -202,7 +207,7 @@ func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 
 	return me.mongodbConn
 }
-
+*/
 // UseClbClient returns clb client for service
 func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	if me.clbConn != nil {
@@ -229,6 +234,7 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 	return me.cvmConn
 }
 
+/*
 // UseTagClient returns tag client for service
 func (me *TencentCloudClient) UseTagClient() *tag.Client {
 	if me.tagConn != nil {
@@ -241,7 +247,7 @@ func (me *TencentCloudClient) UseTagClient() *tag.Client {
 
 	return me.tagConn
 }
-
+*/
 // UseTkeClient returns tke client for service
 func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	if me.tkeConn != nil {
@@ -255,6 +261,7 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	return me.tkeConn
 }
 
+/*
 // UseGaapClient returns gaap client for service
 func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 	if me.gaapConn != nil {
@@ -267,7 +274,8 @@ func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 
 	return me.gaapConn
 }
-
+*/
+/*
 // UseSslClient returns ssl client for service
 func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	if me.sslConn != nil {
@@ -280,7 +288,8 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 
 	return me.sslConn
 }
-
+*/
+/*
 // UseCamClient returns cam client for service
 func (me *TencentCloudClient) UseCamClient() *cam.Client {
 	if me.camConn != nil {
@@ -293,7 +302,7 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 
 	return me.camConn
 }
-
+*/
 // UseCfsClient returns cfs client for service
 func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
 	if me.cfsConn != nil {
@@ -307,6 +316,7 @@ func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
 	return me.cfsConn
 }
 
+/*
 // UseScfClient returns scf client for service
 func (me *TencentCloudClient) UseScfClient() *scf.Client {
 	if me.scfConn != nil {
@@ -319,7 +329,8 @@ func (me *TencentCloudClient) UseScfClient() *scf.Client {
 
 	return me.scfConn
 }
-
+*/
+/*
 // UseTcaplusClient returns tcaplush client for service
 func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
 	if me.tcaplusConn != nil {
@@ -332,7 +343,8 @@ func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
 
 	return me.tcaplusConn
 }
-
+*/
+/*
 // UseDayuClient returns dayu client for service
 func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
 	if me.dayuConn != nil {
@@ -345,7 +357,8 @@ func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
 
 	return me.dayuConn
 }
-
+*/
+/*
 // UseCdnClient returns cdn client for service
 func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
 	if me.cdnConn != nil {
@@ -358,7 +371,7 @@ func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
 
 	return me.cdnConn
 }
-
+*/
 // UseMonitorClient returns monitor client for service
 func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 	if me.monitorConn != nil {

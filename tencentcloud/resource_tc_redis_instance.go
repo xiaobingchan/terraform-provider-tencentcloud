@@ -35,8 +35,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	redis "github.com/tencentyun/tcecloud-sdk-go/tcecloud/redis/v20180412"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -414,7 +414,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			}
 
 			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*sdkErrors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)
@@ -441,7 +441,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			ok, err := redisService.DescribeTaskInfo(ctx, id, taskId)
 			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*sdkErrors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)
@@ -501,7 +501,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			ok, err := service.DescribeTaskInfo(ctx, d.Id(), taskId)
 			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				if _, ok := err.(*sdkErrors.TceCloudSDKError); !ok {
 					return resource.RetryableError(err)
 				} else {
 					return resource.NonRetryableError(err)

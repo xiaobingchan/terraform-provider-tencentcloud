@@ -64,8 +64,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	as "github.com/tencentyun/tcecloud-sdk-go/tcecloud/as/v20180419"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -810,7 +810,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := service.DeleteClusterAsGroups(ctx, clusterId, asGroupId)
 
-		if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			if sdkErr.Code == "InternalError.Param" && strings.Contains(sdkErr.Message, "Not Found") {
 				hasDelete = true
 				return nil

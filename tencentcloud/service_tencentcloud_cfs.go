@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -5,8 +7,8 @@ import (
 	"fmt"
 	"log"
 
-	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cfs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cfs/v20190719"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -199,7 +201,7 @@ func (me *CfsService) DescribeAccessRule(ctx context.Context, accessGroupId, acc
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*errors.TceCloudSDKError); ok {
 			if sdkErr.Code == CfsInvalidPgroup {
 				return nil, nil
 			}

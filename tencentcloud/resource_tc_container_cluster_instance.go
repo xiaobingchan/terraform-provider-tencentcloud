@@ -36,9 +36,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -221,7 +221,7 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		var e error
 		_, workers, e = service.DescribeClusterInstances(ctx, clusterId)
-		if e, ok := e.(*errors.TencentCloudSDKError); ok {
+		if e, ok := e.(*errors.TceCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
 				d.SetId("")
 				return nil
@@ -473,7 +473,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 
 	err = resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
 		_, workers, e := service.DescribeClusterInstances(ctx, clusterId)
-		if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+		if ee, ok := e.(*errors.TceCloudSDKError); ok {
 			if ee.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
@@ -513,7 +513,7 @@ func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData,
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		var e error
 		_, workers, e = service.DescribeClusterInstances(ctx, clusterId)
-		if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+		if ee, ok := e.(*errors.TceCloudSDKError); ok {
 			if ee.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
@@ -541,7 +541,7 @@ func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData,
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := service.DeleteClusterInstances(ctx, clusterId, []string{node.InstanceId})
-		if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+		if ee, ok := e.(*errors.TceCloudSDKError); ok {
 			if ee.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}

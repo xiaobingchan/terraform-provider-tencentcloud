@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create dayu DDoS policy case
 
@@ -43,8 +45,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -552,7 +554,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 	err := dayuService.DeleteDdosPolicyCase(ctx, resourceType, sceneId)
 
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "ResourceInUse" {
 				//if bind automatically, try to unbind policy first
 				//get the automatically generated policy

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query detailed information of CAM SAML providers
 
@@ -17,7 +19,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

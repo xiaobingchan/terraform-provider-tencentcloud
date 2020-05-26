@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -614,6 +614,7 @@ func (me *CvmService) DescribeZones(ctx context.Context) (zones []*cvm.ZoneInfo,
 	return
 }
 
+/*
 func (me *CvmService) CreateReservedInstance(ctx context.Context, configId string, count int64) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewPurchaseReservedInstancesOfferingRequest()
@@ -720,7 +721,7 @@ func (me *CvmService) DescribeReservedInstanceConfigs(ctx context.Context, filte
 	}
 	return
 }
-
+*/
 func flattenCvmTagsMapping(tags []*cvm.Tag) (mapping map[string]string) {
 	mapping = make(map[string]string)
 	for _, tag := range tags {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
@@ -89,7 +89,7 @@ func testAccCheckMysqlReadonlyInstanceDestroy(s *terraform.State) error {
 			return fmt.Errorf("mysql instance still exist")
 		}
 		if err != nil {
-			sdkErr, ok := err.(*errors.TencentCloudSDKError)
+			sdkErr, ok := err.(*errors.TceCloudSDKError)
 			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 				continue
 			}

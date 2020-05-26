@@ -15,9 +15,9 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -1034,7 +1034,7 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 
 		response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -1196,7 +1196,7 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
 	if err != nil {
-		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 			// if security group does not exist, security group rule does not exist too
 			if sdkError.Code == "ResourceNotFound" {
 				return
@@ -1372,7 +1372,7 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 			if err != nil {
 				count = 0
 
-				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 					if sdkError.Code == "ResourceNotFound" {
 						return nil
 					}
@@ -1485,7 +1485,7 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 
 		response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -1705,8 +1705,7 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 }
 
 /*
-EIP
-*/
+// EIP
 func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *vpc.Address, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
@@ -1865,7 +1864,8 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 
 	return nil
 }
-
+*/
+/*
 func (me *VpcService) CreateEni(
 	ctx context.Context,
 	name, vpcId, subnetId, desc string,
@@ -2076,7 +2076,7 @@ func (me *VpcService) describeEnis(
 			if err != nil {
 				count = 0
 
-				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 					if sdkError.Code == "ResourceNotFound" {
 						return nil
 					}
@@ -2301,7 +2301,7 @@ func (me *VpcService) DeleteEni(ctx context.Context, id string) error {
 
 		response, err := client.DescribeNetworkInterfaces(describeRequest)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -2442,7 +2442,7 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.DetachNetworkInterface(request); err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				switch sdkError.Code {
 				case "UnsupportedOperation.InvalidState":
 					return resource.RetryableError(errors.New("cvm may still bind eni"))
@@ -2514,7 +2514,9 @@ func (me *VpcService) DescribeEniByFilters(
 ) (enis []*vpc.NetworkInterface, err error) {
 	return me.describeEnis(ctx, nil, vpcId, subnetId, nil, cvmId, sgId, name, desc, ipv4, tags)
 }
+*/
 
+/*
 func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachmentId string) (eip string, haVip string, has bool, errRet error) {
 	logId := getLogId(ctx)
 	client := me.client.UseVpcClient()
@@ -2693,7 +2695,7 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 
 		response, err := client.DescribeNetworkInterfaces(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
 
@@ -2729,3 +2731,4 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 		return nil
 	})
 }
+*/

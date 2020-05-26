@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query dayu layer 7 rules
 
@@ -24,7 +26,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

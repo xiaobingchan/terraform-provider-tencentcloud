@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a VPN connection.
 
@@ -53,8 +55,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -767,7 +769,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteVpnConnection(request)
 		if e != nil {
-			if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+			if ee, ok := e.(*errors.TceCloudSDKError); ok {
 				if ee.GetCode() == "UnsupportedOperation.InvalidState" {
 					return resource.RetryableError(fmt.Errorf("state is not ready, wait to be `AVAILABLE`."))
 				}
@@ -788,7 +790,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
-			ee, ok := e.(*errors.TencentCloudSDKError)
+			ee, ok := e.(*errors.TceCloudSDKError)
 			if !ok {
 				return retryError(e)
 			}

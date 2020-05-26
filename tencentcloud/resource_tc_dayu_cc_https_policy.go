@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create a dayu CC self-define https policy
 
@@ -34,7 +36,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

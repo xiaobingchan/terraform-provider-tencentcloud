@@ -124,8 +124,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -960,7 +960,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}
@@ -1127,7 +1127,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, d.Id())
 
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}
@@ -1159,7 +1159,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			securityRet, err = service.DescribeClusterSecurity(ctx, d.Id())
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}
@@ -1489,7 +1489,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := service.DeleteCluster(ctx, d.Id())
 
-		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+		if e, ok := err.(*errors.TceCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
@@ -1509,7 +1509,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	if err != nil {
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*errors.TceCloudSDKError); ok {
 				if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 					return nil
 				}

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -6,8 +8,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	scf "github.com/tencentyun/tcecloud-sdk-go/tcecloud/scf/v20180416"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -90,7 +92,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.CreateFunction(request); err != nil {
-			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			e, ok := err.(*sdkErrors.TceCloudSDKError)
 			if ok && strings.Contains(e.Code, "ResourceInUse") {
 				return resource.NonRetryableError(err)
 			}
@@ -116,7 +118,7 @@ func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace stri
 
 		response, err := client.GetFunction(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
 					if sdkError.Code == code {
 						return nil
@@ -284,7 +286,7 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 		ratelimit.Check(deleteRequest.GetAction())
 
 		if _, err := client.DeleteFunction(deleteRequest); err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
 					if sdkError.Code == code {
 						return nil
@@ -309,7 +311,7 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 		if _, err := client.GetFunction(descRequest); err == nil {
 			return resource.RetryableError(errors.New("function still exists"))
 		} else {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
 					if sdkError.Code == code {
 						return nil
@@ -533,7 +535,7 @@ func (me *ScfService) DescribeLogs(
 
 		response, err := client.GetFunctionLogs(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
 					if sdkError.Code == code {
 						return nil

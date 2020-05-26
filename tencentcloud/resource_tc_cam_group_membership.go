@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a CAM group membership.
 
@@ -29,8 +31,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func resourceTencentCloudCamGroupMembership() *schema.Resource {
@@ -274,7 +276,7 @@ func removeUsersFromGroup(members []interface{}, groupId string, meta interface{
 		uId, e := getUidFromName(member.(string), meta)
 		if e != nil {
 			//notice case when user is deleted, the uin is not found, and the membership is removed in the user module when deleted
-			ee, ok := e.(*errors.TencentCloudSDKError)
+			ee, ok := e.(*errors.TceCloudSDKError)
 			if !ok {
 				return e
 			}

@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
+	redis "github.com/tencentyun/tcecloud-sdk-go/tcecloud/redis/v20180412"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -326,14 +326,14 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := err.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(time.Second)
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseRedisClient().DescribeInstances(request)
 		}
 	}
 	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := err.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(3 * time.Second)
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseRedisClient().DescribeInstances(request)
@@ -341,7 +341,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 	}
 
 	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := err.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(5 * time.Second)
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseRedisClient().DescribeInstances(request)
@@ -398,7 +398,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 
 	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := err.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(time.Second)
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
@@ -406,7 +406,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	}
 
 	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := err.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(3 * time.Second)
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
@@ -414,7 +414,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	}
 
 	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+		if _, ok := err.(*errors.TceCloudSDKError); !ok {
 			time.Sleep(5 * time.Second)
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)

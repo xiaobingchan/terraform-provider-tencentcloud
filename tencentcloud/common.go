@@ -15,7 +15,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 const FILED_SP = "#"
@@ -78,7 +78,7 @@ func logElapsed(mark ...string) func() {
 // retryError returns retry error
 func retryError(err error, additionRetryableError ...string) *resource.RetryError {
 	switch realErr := errors.Cause(err).(type) {
-	case *sdkErrors.TencentCloudSDKError:
+	case *sdkErrors.TceCloudSDKError:
 		if isExpectError(realErr, retryableErrorCode) {
 			log.Printf("[CRITAL] Retryable defined error: %v", err)
 			return resource.RetryableError(err)
@@ -100,7 +100,7 @@ func retryError(err error, additionRetryableError ...string) *resource.RetryErro
 
 // isExpectError returns whether error is expect error
 func isExpectError(err error, expectError []string) bool {
-	e, ok := err.(*sdkErrors.TencentCloudSDKError)
+	e, ok := err.(*sdkErrors.TceCloudSDKError)
 	if !ok {
 		return false
 	}

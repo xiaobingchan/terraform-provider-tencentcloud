@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -9,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	gaap "github.com/tencentyun/tcecloud-sdk-go/tcecloud/gaap/v20180529"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -244,7 +246,7 @@ func (me *GaapService) DescribeCertificateById(ctx context.Context, id string) (
 
 		response, err := me.client.UseGaapClient().DescribeCertificateDetail(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Message == "CertificateId not found" {
 					return nil
 				}
@@ -621,7 +623,7 @@ func (me *GaapService) DescribeProxies(
 			if err != nil {
 				count = 0
 
-				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 					if sdkError.Code == "ResourceNotFound" {
 						return nil
 					}
@@ -813,7 +815,7 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -1425,7 +1427,7 @@ func (me *GaapService) DescribeSecurityPolicy(ctx context.Context, id string) (p
 
 		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -1497,7 +1499,7 @@ func (me *GaapService) DeleteSecurityPolicy(ctx context.Context, id string) erro
 
 		_, err := client.DescribeSecurityPolicyDetail(describeRequest)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -1579,7 +1581,7 @@ func (me *GaapService) DescribeSecurityRule(ctx context.Context, id string) (sec
 
 		response, err := me.client.UseGaapClient().DescribeSecurityRules(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -2658,7 +2660,7 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, id string) (rule *g
 
 		response, err := me.client.UseGaapClient().DescribeRulesByRuleIds(request)
 		if err != nil {
-			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkErr.Code == GAAPResourceNotFound {
 					return nil
 				}
@@ -2890,7 +2892,7 @@ func (me *GaapService) DescribeSecurityRules(ctx context.Context, policyId strin
 
 		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok {
 				if sdkError.Code == "ResourceNotFound" {
 					return nil
 				}
@@ -3055,7 +3057,7 @@ func (me *GaapService) CreateDomainErrorPageInfo(ctx context.Context,
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		resp, err := client.CreateDomainErrorPageInfo(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "FailedOperation.DomainAlreadyExisted" {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok && sdkError.Code == "FailedOperation.DomainAlreadyExisted" {
 				return resource.NonRetryableError(helper.WrapErrorf(err, "", sdkError.RequestId, sdkError.Message))
 			}
 
@@ -3082,7 +3084,7 @@ func (me *GaapService) DescribeDomainErrorPageInfo(ctx context.Context, listener
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		resp, err := client.DescribeDomainErrorPageInfo(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
 
@@ -3114,7 +3116,7 @@ func (me *GaapService) DescribeDomainErrorPageInfoList(ctx context.Context, list
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		resp, err := client.DescribeDomainErrorPageInfo(request)
 		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
 
@@ -3139,7 +3141,7 @@ func (me *GaapService) DeleteDomainErrorPageInfo(ctx context.Context, id string)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if _, err := client.DeleteDomainErrorPageInfo(request); err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+			if sdkError, ok := err.(*sdkErrors.TceCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
 

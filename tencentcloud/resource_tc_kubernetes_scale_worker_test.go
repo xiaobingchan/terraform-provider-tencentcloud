@@ -6,7 +6,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -56,7 +56,7 @@ func testAccCheckTkeScaleWorkerDestroy(s *terraform.State) error {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 
-				if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e, ok := err.(*errors.TceCloudSDKError); ok {
 					if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 						return nil
 					}
@@ -106,7 +106,7 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 
-				if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e, ok := err.(*errors.TceCloudSDKError); ok {
 					if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 						return nil
 					}

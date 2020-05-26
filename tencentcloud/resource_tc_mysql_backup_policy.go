@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a mysql policy resource to create a backup policy.
 

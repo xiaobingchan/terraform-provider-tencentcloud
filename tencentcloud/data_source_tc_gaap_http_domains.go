@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query forward domain of layer7 listeners.
 

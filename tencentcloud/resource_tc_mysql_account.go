@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a MySQL account resource for database management. A MySQL instance supports multiple database account.
 
@@ -22,7 +24,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
 )
 
 func resourceTencentCloudMysqlAccount() *schema.Resource {

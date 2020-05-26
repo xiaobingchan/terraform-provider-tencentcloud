@@ -7,8 +7,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 )
 
 func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
@@ -89,7 +89,7 @@ func testAccCheckVpnConnectionDestroy(s *terraform.State) error {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeVpnConnections(request)
 			if e != nil {
-				ee, ok := e.(*errors.TencentCloudSDKError)
+				ee, ok := e.(*errors.TceCloudSDKError)
 				if !ok {
 					return retryError(e)
 				}
@@ -108,7 +108,7 @@ func testAccCheckVpnConnectionDestroy(s *terraform.State) error {
 		})
 		if err != nil {
 			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
-			ee, ok := err.(*errors.TencentCloudSDKError)
+			ee, ok := err.(*errors.TceCloudSDKError)
 			if !ok {
 				return err
 			}

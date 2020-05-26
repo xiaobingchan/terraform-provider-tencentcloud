@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a CAM policy.
 
@@ -48,8 +50,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -139,7 +141,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().CreatePolicy(request)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+			if ee, ok := e.(*sdkErrors.TceCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
 				if strings.Contains(errCode, "PolicyNameInUse") {

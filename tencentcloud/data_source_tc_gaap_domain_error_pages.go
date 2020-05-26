@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query custom GAAP HTTP domain error page info list.
 

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a CAM role policy attachment.
 
@@ -29,7 +31,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
 )
 
 func resourceTencentCloudCamRolePolicyAttachment() *schema.Resource {

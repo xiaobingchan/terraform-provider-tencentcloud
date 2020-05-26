@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 package tencentcloud
 
 import (
@@ -7,8 +9,8 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -43,7 +45,7 @@ func (me *DayuService) DescribeCCSelfdefinePolicies(ctx context.Context, resourc
 		response, err := me.client.UseDayuClient().DescribeCCSelfDefinePolicy(request)
 
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == "InvalidParameterValue" {
 					//this error case is what sdk returns when the dayu service is overdue
 					errRet = nil
@@ -270,7 +272,7 @@ func (me *DayuService) DescribeDdosPolicies(ctx context.Context, resourceType st
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().DescribeDDoSPolicy(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "InvalidParameterValue" {
 				//this is when resource is not exist
 				errRet = nil
@@ -311,7 +313,7 @@ func (me *DayuService) DescribeDdosPolicy(ctx context.Context, resourceType stri
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().DescribeDDoSPolicy(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "InvalidParameterValue" {
 				errRet = nil
 				return
@@ -748,7 +750,7 @@ func (me *DayuService) DescribeDdosPolicyCase(ctx context.Context, resourceType 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().DescribePolicyCase(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "InvalidParameterValue" {
 				//this is when resource is not exist
 				errRet = nil
@@ -859,7 +861,7 @@ func (me *DayuService) DescribeDdosPolicyAttachments(ctx context.Context, resour
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().DescribeDDoSPolicy(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "InvalidParameterValue" {
 				//this is when resource is not exist
 				errRet = nil
@@ -993,7 +995,7 @@ func (me *DayuService) DescribeL7Rules(ctx context.Context, resourceType string,
 		response, err := me.client.UseDayuClient().DescribleL7Rules(request)
 
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == "InvalidParameterValue" {
 					errRet = nil
 					return
@@ -1107,7 +1109,7 @@ func (me *DayuService) DescribeL7Health(ctx context.Context, resourceType string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().DescribeL7HealthConfig(request)
 	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+		if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 			if sdkErr.Code == "InvalidParameterValue" {
 				//this is when resource is not exist
 				errRet = nil
@@ -1351,7 +1353,7 @@ func (me *DayuService) DescribeL4Rules(ctx context.Context, resourceType string,
 		response, err := me.client.UseDayuClient().DescribleL4Rules(request)
 
 		if err != nil {
-			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == "InvalidParameterValue" {
 					errRet = nil
 					return

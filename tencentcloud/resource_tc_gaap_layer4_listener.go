@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a layer4 listener of GAAP.
 

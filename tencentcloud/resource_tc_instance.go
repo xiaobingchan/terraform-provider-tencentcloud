@@ -80,13 +80,12 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -418,19 +417,22 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			}
 		}
 		if instanceChargeType == CVM_CHARGE_TYPE_SPOTPAID {
-			request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{}
-			request.InstanceMarketOptions.MarketType = helper.String(CVM_MARKET_TYPE_SPOT)
-			request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
-			if v, ok := d.GetOk("spot_instance_type"); ok {
-				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(v.(string)))
-			} else {
-				return fmt.Errorf("spot_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
-			}
-			if v, ok := d.GetOk("spot_max_price"); ok {
-				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(v.(string))
-			} else {
-				return fmt.Errorf("spot_max_price can not be empty when instance_charge_type is %s", instanceChargeType)
-			}
+			return fmt.Errorf("instance_charge_type is not supported: %s", instanceChargeType)
+			/*
+				request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{}
+				request.InstanceMarketOptions.MarketType = helper.String(CVM_MARKET_TYPE_SPOT)
+				request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
+				if v, ok := d.GetOk("spot_instance_type"); ok {
+					request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(v.(string)))
+				} else {
+					return fmt.Errorf("spot_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
+				}
+				if v, ok := d.GetOk("spot_max_price"); ok {
+					request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(v.(string))
+				} else {
+					return fmt.Errorf("spot_max_price can not be empty when instance_charge_type is %s", instanceChargeType)
+				}
+			*/
 		}
 	}
 	if v, ok := d.GetOk("placement_group_id"); ok {
@@ -971,7 +973,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		//when state is terminating, do not delete but check exist
 		if errRet != nil {
 			//check InvalidInstanceState.Terminating
-			ee, ok := errRet.(*errors.TencentCloudSDKError)
+			ee, ok := errRet.(*errors.TceCloudSDKError)
 			if !ok {
 				return retryError(errRet)
 			}

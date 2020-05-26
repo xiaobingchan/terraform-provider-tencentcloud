@@ -21,7 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -235,20 +235,20 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	ids := make([]string, 0, len(results))
 	for _, image := range results {
 		mapping := map[string]interface{}{
-			"image_id":           image.ImageId,
-			"os_name":            image.OsName,
-			"image_type":         image.ImageType,
-			"created_time":       image.CreatedTime,
-			"image_name":         image.ImageName,
-			"image_description":  image.ImageDescription,
-			"image_size":         image.ImageSize,
-			"architecture":       image.Architecture,
-			"image_state":        image.ImageState,
-			"platform":           image.Platform,
-			"image_creator":      image.ImageCreator,
-			"image_source":       image.ImageSource,
-			"sync_percent":       image.SyncPercent,
-			"support_cloud_init": image.IsSupportCloudinit,
+			"image_id":          image.ImageId,
+			"os_name":           image.OsName,
+			"image_type":        image.ImageType,
+			"created_time":      image.CreatedTime,
+			"image_name":        image.ImageName,
+			"image_description": image.ImageDescription,
+			"image_size":        image.ImageSize,
+			"architecture":      image.Architecture,
+			"image_state":       image.ImageState,
+			"platform":          image.Platform,
+			"image_creator":     image.ImageCreator,
+			"image_source":      image.ImageSource,
+			// "sync_percent":       image.SyncPercent,
+			// "support_cloud_init": image.IsSupportCloudinit,
 		}
 		imageList = append(imageList, mapping)
 		ids = append(ids, *image.ImageId)

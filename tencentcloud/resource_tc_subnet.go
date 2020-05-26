@@ -39,7 +39,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -354,7 +354,7 @@ func resourceTencentCloudVpcSubnetDelete(d *schema.ResourceData, meta interface{
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteSubnet(ctx, d.Id()); err != nil {
-			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*errors.TceCloudSDKError); ok {
 				if sdkErr.Code == VPCNotFound {
 					return nil
 				}

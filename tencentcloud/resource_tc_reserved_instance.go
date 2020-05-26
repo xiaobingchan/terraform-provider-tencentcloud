@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a reserved instance resource.
 
@@ -28,7 +30,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
 )
 
 func resourceTencentCloudReservedInstance() *schema.Resource {

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create tcaplus idl file
 

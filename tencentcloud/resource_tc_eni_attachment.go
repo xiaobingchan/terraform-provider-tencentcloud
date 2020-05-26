@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to detailed information of attached backend server to an ENI.
 

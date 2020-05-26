@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a CDN domain.
 
@@ -47,7 +49,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+	cdn "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdn/v20180606"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )

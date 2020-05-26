@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 func TestAccTencentCloudAsAttachment(t *testing.T) {
@@ -75,7 +75,7 @@ func testAccCheckAsAttachmentDestroy(s *terraform.State) error {
 
 		instances, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID)
 		if err != nil {
-			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+			if sdkErr, ok := err.(*errors.TceCloudSDKError); ok {
 				if sdkErr.Code == AsScalingGroupNotFound {
 					return nil
 				}

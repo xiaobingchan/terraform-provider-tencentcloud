@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource to create a GAAP proxy.
 
@@ -35,8 +37,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	gaap "github.com/tencentyun/tcecloud-sdk-go/tcecloud/gaap/v20180529"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

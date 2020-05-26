@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this resource to create dayu layer 7 rule
 
@@ -37,7 +39,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 )
 
 func resourceTencentCloudDayuL7Rule() *schema.Resource {

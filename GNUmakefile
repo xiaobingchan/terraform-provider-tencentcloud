@@ -92,6 +92,10 @@ hooks: tools
 	find .git/hooks -type l -exec rm {} \;
 	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
 
+tce:
+	find ./$(PKG_NAME) -type f|xargs sed -i 's#github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud#github.com/tencentyun/tcecloud-sdk-go/tcecloud#g'
+	find ./$(PKG_NAME) -type f|xargs sed -i 's#TencentCloudSDKError#TceCloudSDKError#g'
+
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), getting..."

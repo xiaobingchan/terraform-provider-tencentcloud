@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
+	sdkError "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 )
 
 var testAccTencentCloudMysqlPrivilegeType = "tencentcloud_mysql_privilege"
@@ -79,7 +79,7 @@ func testAccMysqlPrivilegeExists(s *terraform.State) error {
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		response, inErr = testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 		if inErr != nil {
-			if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := inErr.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == MysqlInstanceIdNotFound {
 					return resource.NonRetryableError(fmt.Errorf("mysql account not exists in mysql"))
 				}
@@ -145,7 +145,7 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		response, inErr = testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 		if inErr != nil {
-			if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr, ok := inErr.(*sdkError.TceCloudSDKError); ok {
 				if sdkErr.Code == MysqlInstanceIdNotFound {
 					return nil
 				}
