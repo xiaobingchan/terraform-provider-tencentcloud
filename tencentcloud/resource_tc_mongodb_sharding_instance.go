@@ -179,7 +179,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_mongodb_sharding_instance.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	mongodbService := MongodbService{client: client}
@@ -294,9 +294,10 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 
 func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_sharding_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 
@@ -371,7 +372,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_mongodb_sharding_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 
@@ -485,7 +486,7 @@ func resourceMongodbShardingInstanceDelete(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_mongodb_sharding_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 	mongodbService := MongodbService{

@@ -83,9 +83,10 @@ func resourceTencentCloudMysqlBackupPolicyCreate(d *schema.ResourceData, meta in
 
 func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		desResponse, e := mysqlService.DescribeBackupConfigByMysqlId(ctx, d.Id())
@@ -124,7 +125,7 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -158,7 +159,7 @@ func resourceTencentCloudMysqlBackupPolicyDelete(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -134,7 +134,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer7_listener.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	protocol := d.Get("protocol").(string)
 	name := d.Get("name").(string)
@@ -209,8 +209,10 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 
 func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer7_listener.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	protocol := d.Get("protocol").(string)
@@ -353,7 +355,7 @@ LOOP:
 func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer7_listener.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	protocol := d.Get("protocol").(string)
@@ -416,7 +418,7 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 func resourceTencentCloudGaapLayer7ListenerDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer7_listener.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	proxyId := d.Get("proxy_id").(string)

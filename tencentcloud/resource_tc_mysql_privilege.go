@@ -396,7 +396,7 @@ func resourceTencentCloudMysqlPrivilegeCreate(d *schema.ResourceData, meta inter
 
 	var (
 		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), "logId", logId)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
 		mysqlId     = d.Get("mysql_id").(string)
 		accountName = d.Get("account_name").(string)
 		accountHost = d.Get("account_host").(string)
@@ -419,9 +419,10 @@ func resourceTencentCloudMysqlPrivilegeCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_privilege.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var privilegeId resourceTencentCloudMysqlPrivilegeId
 
@@ -570,7 +571,7 @@ func resourceTencentCloudMysqlPrivilegeUpdate(d *schema.ResourceData, meta inter
 
 	var (
 		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), "logId", logId)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
 		privilegeId = resourceTencentCloudMysqlPrivilegeId{}
 	)
 	if err := json.Unmarshal([]byte(d.Id()), &privilegeId); err != nil {
@@ -596,7 +597,7 @@ func resourceTencentCloudMysqlPrivilegeDelete(d *schema.ResourceData, meta inter
 
 	var (
 		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), "logId", logId)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
 		privilegeId = resourceTencentCloudMysqlPrivilegeId{}
 	)
 	if err := json.Unmarshal([]byte(d.Id()), &privilegeId); err != nil {

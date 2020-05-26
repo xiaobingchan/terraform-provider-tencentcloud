@@ -175,7 +175,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	d.SetId(*response.Response.RoleId)
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	roleId := d.Id()
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -198,9 +198,10 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 
 func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_role.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	roleId := d.Id()
 	camService := CamService{
@@ -325,7 +326,7 @@ func resourceTencentCloudCamRoleDelete(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_cam_role.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	roleId := d.Id()
 	camService := CamService{

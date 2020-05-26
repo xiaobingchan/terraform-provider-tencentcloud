@@ -13,7 +13,7 @@ data "tencentcloud_cam_groups" "foo" {
 
 # query by name
 data "tencentcloud_cam_groups" "bar" {
-  name   = "cam-group-test"
+  name = "cam-group-test"
 }
 ```
 */
@@ -92,7 +92,7 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 	defer logElapsed("data_source.tencentcloud_cam_groups.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("group_id"); ok {

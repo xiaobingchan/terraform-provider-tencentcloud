@@ -377,7 +377,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -625,9 +625,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 	forceDelete := false
@@ -735,7 +736,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	instanceId := d.Id()
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -745,12 +746,51 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	unsupportedUpdateFields := []string{
 		"instance_charge_type_prepaid_period",
-		"instance_charge_type_prepaid_renew_flag",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("tencentcloud_cvm_instance update on %s is not support yet", field)
 		}
+	}
+
+	if d.HasChange("instance_charge_type_prepaid_renew_flag") {
+		//check
+		chargeType := d.Get("instance_charge_type").(string)
+		if chargeType != CVM_CHARGE_TYPE_PREPAID {
+			return fmt.Errorf("tencentcloud_cvm_instance update on instance_charge_type_prepaid_period or instance_charge_type_prepaid_renew_flag is only supported with charge type PREPAID")
+		}
+
+		//renew api
+		err := cvmService.ModifyRenewParam(ctx, instanceId, d.Get("instance_charge_type_prepaid_renew_flag").(string))
+		if err != nil {
+			return err
+		}
+
+		//check success
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && instance.LatestOperationState != nil {
+				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_SUCCESS {
+					return nil
+				} else if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
+					return resource.NonRetryableError(fmt.Errorf("update instance %s prepaid charge type failed", instanceId))
+				} else {
+					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+				}
+			} else {
+				return resource.RetryableError(fmt.Errorf("cvm instance %s returns nil status", instanceId))
+			}
+
+		})
+		if err != nil {
+			return err
+		}
+
+		time.Sleep(readRetryTimeout)
+		d.SetPartial("instance_charge_type_prepaid_renew_flag")
 	}
 
 	if d.HasChange("instance_name") {
@@ -917,7 +957,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 	//check is force delete or not

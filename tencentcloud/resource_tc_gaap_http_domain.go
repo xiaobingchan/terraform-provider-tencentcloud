@@ -156,7 +156,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	listenerId := d.Get("listener_id").(string)
 	domain := d.Get("domain").(string)
@@ -300,8 +300,10 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	var (
@@ -384,7 +386,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	var (
@@ -596,7 +598,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 func resourceTencentCloudGaapHttpDomainDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	var (

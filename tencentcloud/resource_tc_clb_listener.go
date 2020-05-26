@@ -9,10 +9,10 @@ HTTP Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "HTTP_listener" {
-  clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
-  port                       = 80
-  protocol                   = "HTTP"
+  clb_id        = "lb-0lh5au7v"
+  listener_name = "test_listener"
+  port          = 80
+  protocol      = "HTTP"
 }
 ```
 
@@ -38,14 +38,14 @@ HTTPS Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "HTTPS_listener" {
-  clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
-  port                       = "80"
-  protocol                   = "HTTPS"
-  certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "VjANRdz8"
-  certificate_ca_id          = "VfqO4zkB"
-  sni_switch                 = true
+  clb_id               = "lb-0lh5au7v"
+  listener_name        = "test_listener"
+  port                 = "80"
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "MUTUAL"
+  certificate_id       = "VjANRdz8"
+  certificate_ca_id    = "VfqO4zkB"
+  sni_switch           = true
 }
 ```
 
@@ -198,7 +198,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Get("clb_id").(string)
 	listenerName := d.Get("listener_name").(string)
@@ -296,9 +296,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_listener.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	clbId := d.Get("clb_id").(string)
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -363,7 +364,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	listenerId := d.Id()
 	clbId := d.Get("clb_id").(string)
 	changed := false
@@ -455,7 +456,7 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	listenerId := d.Id()
 	clbId := d.Get("clb_id").(string)
 

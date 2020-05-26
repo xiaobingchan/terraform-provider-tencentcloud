@@ -7,9 +7,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_account" "default" {
-  mysql_id = "my-test-database"
-  name = "tf_account"
-  password = "********"
+  mysql_id    = "my-test-database"
+  name        = "tf_account"
+  password    = "********"
   description = "My test account"
 }
 ```
@@ -76,7 +76,7 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_mysql_account.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -125,9 +125,10 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 
 func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -188,7 +189,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_mysql_account.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -275,7 +276,7 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_mysql_account.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 

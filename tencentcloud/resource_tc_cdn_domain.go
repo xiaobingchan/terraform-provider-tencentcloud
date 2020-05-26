@@ -7,22 +7,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cdn_domain" "foo" {
-  domain = "xxxx.com"
-  service_type = "web"
-  area = "mainland"
+  domain         = "xxxx.com"
+  service_type   = "web"
+  area           = "mainland"
+  full_url_cache = false
 
   origin {
-    origin_type = "ip"
-    origin_list = ["127.0.0.1"]
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
     origin_pull_protocol = "follow"
   }
 
   https_config {
-    https_switch = "off"
-    http2_switch = "off"
+    https_switch         = "off"
+    http2_switch         = "off"
     ocsp_stapling_switch = "off"
-    spdy_switch = "off"
-    verify_client = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
   }
 
   tags = {
@@ -50,6 +51,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdn "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdn/v20180606"
+	sdkErrors "github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -89,6 +91,12 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_AREA),
 				Description:  "Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.",
+			},
+			"full_url_cache": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether to enable full-path cache. Default value is `true`.",
 			},
 			"origin": {
 				Type:        schema.TypeList,
@@ -203,7 +211,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 									},
 									"certificate_name": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Server certificate name.",
 									},
 									"certificate_content": {
@@ -221,6 +229,16 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 										Optional:    true,
 										Description: "Certificate remarks.",
 									},
+									"deploy_time": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Deploy time of server certificate.",
+									},
+									"expire_time": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Expire time of server certificate.",
+									},
 								},
 							},
 						},
@@ -233,13 +251,23 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"certificate_name": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Client certificate name.",
 									},
 									"certificate_content": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Required:    true,
 										Description: "Client Certificate PEM format, requires Base64 encoding.",
+									},
+									"deploy_time": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Deploy time of client certificate.",
+									},
+									"expire_time": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Expire time of client certificate.",
 									},
 								},
 							},
@@ -276,7 +304,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cdnService := CdnService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -288,6 +316,13 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	if v, ok := d.GetOk("area"); ok {
 		request.Area = helper.String(v.(string))
+	}
+	fullUrlCache := d.Get("full_url_cache").(bool)
+	request.CacheKey = &cdn.CacheKey{}
+	if fullUrlCache {
+		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
+	} else {
+		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
 	}
 
 	// origin
@@ -347,9 +382,6 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 					if v := serverCert["certificate_id"]; v.(string) != "" {
 						request.Https.CertInfo.CertId = helper.String(v.(string))
 					}
-					if v := serverCert["certificate_name"]; v.(string) != "" {
-						request.Https.CertInfo.CertName = helper.String(v.(string))
-					}
 					if v := serverCert["certificate_content"]; v.(string) != "" {
 						request.Https.CertInfo.Certificate = helper.String(v.(string))
 					}
@@ -366,7 +398,6 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 				if len(clientCerts) > 0 {
 					clientCert := clientCerts[0].(map[string]interface{})
 					request.Https.ClientCertInfo = &cdn.ClientCert{}
-					request.Https.ClientCertInfo.CertName = helper.String(clientCert["certificate_name"].(string))
 					if v := clientCert["certificate_content"]; v.(string) != "" {
 						request.Https.ClientCertInfo.Certificate = helper.String(v.(string))
 					}
@@ -379,8 +410,11 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		ratelimit.Check(request.GetAction())
 		_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().AddCdnDomain(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if sdkErr, ok := err.(*sdkErrors.TceCloudSDKError); ok {
+				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROE {
+					return resource.NonRetryableError(err)
+				}
+			}
 			return retryError(err)
 		}
 		return nil
@@ -422,8 +456,10 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
 	region := client.Region
 	cdnService := CdnService{client: client}
@@ -454,6 +490,11 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("status", domainConfig.Status)
 	_ = d.Set("create_time", domainConfig.CreateTime)
 	_ = d.Set("cname", domainConfig.Cname)
+	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
+		_ = d.Set("full_url_cache", false)
+	} else {
+		_ = d.Set("full_url_cache", true)
+	}
 
 	origins := make([]map[string]interface{}, 0, 1)
 	origin := make(map[string]interface{}, 8)
@@ -475,22 +516,52 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	httpsConfig["ocsp_stapling_switch"] = domainConfig.Https.OcspStapling
 	httpsConfig["spdy_switch"] = domainConfig.Https.Spdy
 	httpsConfig["verify_client"] = domainConfig.Https.VerifyClient
-	if domainConfig.Https.CertInfo != nil {
+
+	oldHttpsConfigs := make([]interface{}, 0)
+	if _, ok := d.GetOk("https_config"); ok {
+		oldHttpsConfigs = d.Get("https_config").([]interface{})
+	}
+	oldHttpsConfig := make(map[string]interface{})
+	if len(oldHttpsConfigs) > 0 {
+		oldHttpsConfig = oldHttpsConfigs[0].(map[string]interface{})
+	}
+	oldServerConfigs := make([]interface{}, 0)
+	if _, ok := oldHttpsConfig["server_certificate_config"]; ok {
+		oldServerConfigs = oldHttpsConfig["server_certificate_config"].([]interface{})
+	}
+	oldServerConfig := make(map[string]interface{})
+	if len(oldServerConfigs) > 0 {
+		oldServerConfig = oldServerConfigs[0].(map[string]interface{})
+	}
+	oldClientConfigs := make([]interface{}, 0)
+	if _, ok := oldHttpsConfig["client_certificate_config"]; ok {
+		oldClientConfigs = oldHttpsConfig["client_certificate_config"].([]interface{})
+	}
+	oldClientConfig := make(map[string]interface{})
+	if len(oldClientConfigs) > 0 {
+		oldClientConfig = oldClientConfigs[0].(map[string]interface{})
+	}
+
+	if domainConfig.Https.CertInfo != nil && domainConfig.Https.CertInfo.CertName != nil {
 		serverCertConfigs := make([]map[string]interface{}, 0, 1)
 		serverCertConfig := make(map[string]interface{}, 5)
 		serverCertConfig["certificate_id"] = domainConfig.Https.CertInfo.CertId
 		serverCertConfig["certificate_name"] = domainConfig.Https.CertInfo.CertName
-		serverCertConfig["certificate_content"] = domainConfig.Https.CertInfo.Certificate
-		serverCertConfig["private_key"] = domainConfig.Https.CertInfo.PrivateKey
+		serverCertConfig["certificate_content"] = oldServerConfig["certificate_content"]
+		serverCertConfig["private_key"] = oldServerConfig["private_key"]
 		serverCertConfig["message"] = domainConfig.Https.CertInfo.Message
+		serverCertConfig["deploy_time"] = domainConfig.Https.CertInfo.DeployTime
+		serverCertConfig["expire_time"] = domainConfig.Https.CertInfo.ExpireTime
 		serverCertConfigs = append(serverCertConfigs, serverCertConfig)
 		httpsConfig["server_certificate_config"] = serverCertConfigs
 	}
-	if domainConfig.Https.ClientCertInfo != nil {
+	if domainConfig.Https.ClientCertInfo != nil && domainConfig.Https.ClientCertInfo.CertName != nil {
 		clientCertConfigs := make([]map[string]interface{}, 0, 1)
 		clientCertConfig := make(map[string]interface{}, 2)
+		clientCertConfig["certificate_content"] = oldClientConfig["certificate_content"]
 		clientCertConfig["certificate_name"] = domainConfig.Https.ClientCertInfo.CertName
-		clientCertConfig["certificate_content"] = domainConfig.Https.ClientCertInfo.Certificate
+		clientCertConfig["deploy_time"] = domainConfig.Https.ClientCertInfo.DeployTime
+		clientCertConfig["expire_time"] = domainConfig.Https.ClientCertInfo.ExpireTime
 		clientCertConfigs = append(clientCertConfigs, clientCertConfig)
 		httpsConfig["client_certificate_config"] = clientCertConfigs
 	}
@@ -509,7 +580,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cdnService := CdnService{client: client}
 
@@ -531,6 +602,16 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("area") {
 		request.Area = helper.String(d.Get("area").(string))
 		updateAttrs = append(updateAttrs, "area")
+	}
+	if d.HasChange("full_url_cache") {
+		fullUrlCache := d.Get("full_url_cache").(bool)
+		request.CacheKey = &cdn.CacheKey{}
+		if fullUrlCache {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
+		} else {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
+		}
+		updateAttrs = append(updateAttrs, "full_url_cache")
 	}
 	if d.HasChange("origin") {
 		updateAttrs = append(updateAttrs, "origin")
@@ -590,9 +671,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 					if v := serverCert["certificate_id"]; v.(string) != "" {
 						request.Https.CertInfo.CertId = helper.String(v.(string))
 					}
-					if v := serverCert["certificate_name"]; v.(string) != "" {
-						request.Https.CertInfo.CertName = helper.String(v.(string))
-					}
 					if v := serverCert["certificate_content"]; v.(string) != "" {
 						request.Https.CertInfo.Certificate = helper.String(v.(string))
 					}
@@ -609,7 +687,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 				if len(clientCerts) > 0 {
 					clientCert := clientCerts[0].(map[string]interface{})
 					request.Https.ClientCertInfo = &cdn.ClientCert{}
-					request.Https.ClientCertInfo.CertName = helper.String(clientCert["certificate_name"].(string))
 					if v := clientCert["certificate_content"]; v.(string) != "" {
 						request.Https.ClientCertInfo.Certificate = helper.String(v.(string))
 					}
@@ -675,7 +752,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cdnService := CdnService{client: client}
 

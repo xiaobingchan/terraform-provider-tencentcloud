@@ -14,9 +14,10 @@ Provides a resource to create a CDN domain.
 
 ```hcl
 resource "tencentcloud_cdn_domain" "foo" {
-  domain       = "xxxx.com"
-  service_type = "web"
-  area         = "mainland"
+  domain         = "xxxx.com"
+  service_type   = "web"
+  area           = "mainland"
+  full_url_cache = false
 
   origin {
     origin_type          = "ip"
@@ -46,14 +47,14 @@ The following arguments are supported:
 * `origin` - (Required) Origin server configuration. It's a list and consist of at most one item.
 * `service_type` - (Required, ForceNew) Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.
 * `area` - (Optional) Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.
+* `full_url_cache` - (Optional) Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `project_id` - (Optional) The project CDN belongs to, default to 0.
 * `tags` - (Optional) Tags of cdn domain.
 
 The `client_certificate_config` object supports the following:
 
-* `certificate_name` - (Required) Client certificate name.
-* `certificate_content` - (Optional) Client Certificate PEM format, requires Base64 encoding.
+* `certificate_content` - (Required) Client Certificate PEM format, requires Base64 encoding.
 
 The `https_config` object supports the following:
 
@@ -80,7 +81,6 @@ The `server_certificate_config` object supports the following:
 
 * `certificate_content` - (Optional) Server certificate information. This is required when uploading an external certificate, which should contain the complete certificate chain.
 * `certificate_id` - (Optional) Server certificate ID.
-* `certificate_name` - (Optional) Server certificate name.
 * `message` - (Optional) Certificate remarks.
 * `private_key` - (Optional) Server key information. This is required when uploading an external certificate.
 

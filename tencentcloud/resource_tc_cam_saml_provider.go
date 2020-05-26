@@ -129,7 +129,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	_ = d.Set("provider_arn", *response.Response.ProviderArn)
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	samlProviderId := d.Id()
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -156,9 +156,10 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_saml_provider.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	samlProviderId := d.Id()
 	camService := CamService{

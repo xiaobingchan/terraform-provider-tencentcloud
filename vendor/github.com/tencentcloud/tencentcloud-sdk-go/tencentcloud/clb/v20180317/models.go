@@ -90,13 +90,13 @@ type AssociationItem struct {
 type AutoRewriteRequest struct {
 	*tchttp.BaseRequest
 
-	// 负载均衡实例ID
+	// 负载均衡实例ID。
 	LoadBalancerId *string `json:"LoadBalancerId,omitempty" name:"LoadBalancerId"`
 
-	// HTTPS:443监听器的ID
+	// HTTPS:443监听器的ID。
 	ListenerId *string `json:"ListenerId,omitempty" name:"ListenerId"`
 
-	// HTTPS:443监听器下需要重定向的域名
+	// HTTPS:443监听器下需要重定向的域名，若不填，对HTTPS:443监听器下的所有域名都设置重定向。
 	Domains []*string `json:"Domains,omitempty" name:"Domains" list`
 }
 
@@ -978,6 +978,9 @@ type DeleteRuleRequest struct {
 
 	// 要删除的转发规则的转发路径，已提供LocationIds参数时本参数不生效
 	Url *string `json:"Url,omitempty" name:"Url"`
+
+	// 监听器下必须配置一个默认域名，当需要删除默认域名时，可以指定另一个域名作为新的默认域名。
+	NewDefaultServerDomain *string `json:"NewDefaultServerDomain,omitempty" name:"NewDefaultServerDomain"`
 }
 
 func (r *DeleteRuleRequest) ToJsonString() string {
@@ -2347,6 +2350,10 @@ type LoadBalancer struct {
 	// 封堵或解封时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsBlockTime *string `json:"IsBlockTime,omitempty" name:"IsBlockTime"`
+
+	// IP类型是否是本地BGP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalBgp *bool `json:"LocalBgp,omitempty" name:"LocalBgp"`
 }
 
 type LoadBalancerHealth struct {
@@ -2487,6 +2494,9 @@ type ModifyDomainAttributesRequest struct {
 
 	// 是否设为默认域名，注意，一个监听器下只能设置一个默认域名。
 	DefaultServer *bool `json:"DefaultServer,omitempty" name:"DefaultServer"`
+
+	// 监听器下必须配置一个默认域名，若要关闭原默认域名，必须同时指定另一个域名作为新的默认域名。
+	NewDefaultServerDomain *string `json:"NewDefaultServerDomain,omitempty" name:"NewDefaultServerDomain"`
 }
 
 func (r *ModifyDomainAttributesRequest) ToJsonString() string {
@@ -3302,6 +3312,46 @@ type RuleTargets struct {
 	// 后端服务的信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Targets []*Backend `json:"Targets,omitempty" name:"Targets" list`
+}
+
+type SetLoadBalancerClsLogRequest struct {
+	*tchttp.BaseRequest
+
+	// 负载均衡实例 ID
+	LoadBalancerId *string `json:"LoadBalancerId,omitempty" name:"LoadBalancerId"`
+
+	// 日志服务(CLS)的日志集ID
+	LogSetId *string `json:"LogSetId,omitempty" name:"LogSetId"`
+
+	// 日志服务(CLS)的日志主题ID
+	LogTopicId *string `json:"LogTopicId,omitempty" name:"LogTopicId"`
+}
+
+func (r *SetLoadBalancerClsLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SetLoadBalancerClsLogRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type SetLoadBalancerClsLogResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *SetLoadBalancerClsLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SetLoadBalancerClsLogResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type SetLoadBalancerSecurityGroupsRequest struct {

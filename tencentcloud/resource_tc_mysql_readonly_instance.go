@@ -142,7 +142,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -234,9 +234,10 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, e := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
@@ -264,7 +265,7 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	payType := d.Get("pay_type").(int)
 
@@ -295,7 +296,7 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())

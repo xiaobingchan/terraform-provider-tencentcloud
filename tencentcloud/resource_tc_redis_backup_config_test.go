@@ -50,7 +50,7 @@ func testAccTencentCloudRedisBackupConfigExists(r string) resource.TestCheckFunc
 	return func(s *terraform.State) error {
 
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -68,7 +68,7 @@ func testAccTencentCloudRedisBackupConfigExists(r string) resource.TestCheckFunc
 
 func testAccTencentCloudRedisBackupConfigDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
@@ -92,9 +92,10 @@ func testAccTencentCloudRedisBackupConfigDestroy(s *terraform.State) error {
 }
 
 func testAccRedisBackupConfigUpdate() string {
-	return fmt.Sprintf(`
+	return `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
+  type_id           = 2 
   password          = "test12345789"
   mem_size          = 8192
   name              = "terrform_test"
@@ -103,13 +104,14 @@ resource "tencentcloud_redis_backup_config" "redis_backup_config" {
   redis_id      = tencentcloud_redis_instance.redis_instance_test.id
   backup_time   = "01:00-02:00"
   backup_period = ["Saturday", "Sunday"]
-}`)
+}`
 }
 
 func testAccRedisBackupConfig() string {
-	return fmt.Sprintf(`
+	return `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
+  type_id           = 2 
   password          = "test12345789"
   mem_size          = 8192
   name              = "terrform_test"
@@ -118,5 +120,5 @@ resource "tencentcloud_redis_backup_config" "redis_backup_config" {
   redis_id      = tencentcloud_redis_instance.redis_instance_test.id
   backup_time   = "06:00-07:00"
   backup_period = ["Wednesday"]
-}`)
+}`
 }

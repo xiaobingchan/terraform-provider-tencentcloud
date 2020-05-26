@@ -168,9 +168,10 @@ func resourceTencentCloudAlbServerAttachmentCreate(d *schema.ResourceData, meta 
 
 func resourceTencentCloudAlbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_alb_server_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), ":")
 	if len(items) < 3 {
@@ -230,7 +231,7 @@ func resourceTencentCloudAlbServerAttachmentDelete(d *schema.ResourceData, meta 
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), ":")
 	if len(items) < 3 {

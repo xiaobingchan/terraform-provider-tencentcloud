@@ -59,12 +59,15 @@ type AddExistedInstancesResponse struct {
 	Response *struct {
 
 		// 失败的节点ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		FailedInstanceIds []*string `json:"FailedInstanceIds,omitempty" name:"FailedInstanceIds" list`
 
 		// 成功的节点ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		SuccInstanceIds []*string `json:"SuccInstanceIds,omitempty" name:"SuccInstanceIds" list`
 
 		// 超时未返回出来节点的ID(可能失败，也可能成功)
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		TimeoutInstanceIds []*string `json:"TimeoutInstanceIds,omitempty" name:"TimeoutInstanceIds" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -172,6 +175,9 @@ type ClusterAdvancedSettings struct {
 
 	// 集群VPC-CNI模式是否为非固定IP，默认: FALSE 固定IP。
 	IsNonStaticIpMode *bool `json:"IsNonStaticIpMode,omitempty" name:"IsNonStaticIpMode"`
+
+	// 是否启用集群删除保护
+	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
 }
 
 type ClusterAsGroup struct {
@@ -189,6 +195,9 @@ type ClusterAsGroup struct {
 	// 伸缩组的label列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Labels []*Label `json:"Labels,omitempty" name:"Labels" list`
+
+	// 创建时间
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 }
 
 type ClusterAsGroupAttribute struct {
@@ -240,6 +249,22 @@ type ClusterAsGroupOption struct {
 	// 计算资源使用量时是否默认忽略DaemonSet的实例(默认值: False，不忽略)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreDaemonSetsUtilization *bool `json:"IgnoreDaemonSetsUtilization,omitempty" name:"IgnoreDaemonSetsUtilization"`
+
+	// CA做健康性判断的个数，默认3，即超过OkTotalUnreadyCount个数后，CA会进行健康性判断。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OkTotalUnreadyCount *int64 `json:"OkTotalUnreadyCount,omitempty" name:"OkTotalUnreadyCount"`
+
+	// 未就绪节点的最大百分比，此后CA会停止操作
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxTotalUnreadyPercentage *int64 `json:"MaxTotalUnreadyPercentage,omitempty" name:"MaxTotalUnreadyPercentage"`
+
+	// 表示未准备就绪的节点在有资格进行缩减之前应该停留多长时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScaleDownUnreadyTime *int64 `json:"ScaleDownUnreadyTime,omitempty" name:"ScaleDownUnreadyTime"`
+
+	// CA删除未在Kubernetes中注册的节点之前等待的时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnregisteredNodeRemovalTime *int64 `json:"UnregisteredNodeRemovalTime,omitempty" name:"UnregisteredNodeRemovalTime"`
 }
 
 type ClusterBasicSettings struct {
@@ -654,18 +679,23 @@ func (r *CreateClusterRouteTableResponse) FromJsonString(s string) error {
 type DataDisk struct {
 
 	// 云盘类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
 	// 文件系统(ext3/ext4/xfs)
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	FileSystem *string `json:"FileSystem,omitempty" name:"FileSystem"`
 
 	// 云盘大小(G）
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
 
 	// 是否自动化格式盘并挂载
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoFormatAndMount *bool `json:"AutoFormatAndMount,omitempty" name:"AutoFormatAndMount"`
 
 	// 挂载目录
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	MountTarget *string `json:"MountTarget,omitempty" name:"MountTarget"`
 }
 
@@ -809,6 +839,18 @@ type DeleteClusterInstancesResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
+		// 删除成功的实例ID列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		SuccInstanceIds []*string `json:"SuccInstanceIds,omitempty" name:"SuccInstanceIds" list`
+
+		// 删除失败的实例ID列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FailedInstanceIds []*string `json:"FailedInstanceIds,omitempty" name:"FailedInstanceIds" list`
+
+		// 未匹配到的实例ID列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		NotFoundInstanceIds []*string `json:"NotFoundInstanceIds,omitempty" name:"NotFoundInstanceIds" list`
+
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
@@ -831,6 +873,9 @@ type DeleteClusterRequest struct {
 
 	// 集群实例删除时的策略：terminate（销毁实例，仅支持按量计费云主机实例） retain （仅移除，保留实例）
 	InstanceDeleteMode *string `json:"InstanceDeleteMode,omitempty" name:"InstanceDeleteMode"`
+
+	// 集群删除时资源的删除策略，目前支持CBS（默认保留CBS）
+	ResourceDeleteOptions []*ResourceDeleteOption `json:"ResourceDeleteOptions,omitempty" name:"ResourceDeleteOptions" list`
 }
 
 func (r *DeleteClusterRequest) ToJsonString() string {
@@ -1005,7 +1050,7 @@ type DescribeClusterAsGroupsResponse struct {
 		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 集群关联的伸缩组列表
-		ClusterAsGroupSet *ClusterAsGroup `json:"ClusterAsGroupSet,omitempty" name:"ClusterAsGroupSet"`
+		ClusterAsGroupSet []*ClusterAsGroup `json:"ClusterAsGroupSet,omitempty" name:"ClusterAsGroupSet" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1271,7 +1316,16 @@ type DescribeClusterSecurityResponse struct {
 		PgwEndpoint *string `json:"PgwEndpoint,omitempty" name:"PgwEndpoint"`
 
 		// 集群访问策略组
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		SecurityPolicy []*string `json:"SecurityPolicy,omitempty" name:"SecurityPolicy" list`
+
+		// 集群Kubeconfig文件
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Kubeconfig *string `json:"Kubeconfig,omitempty" name:"Kubeconfig"`
+
+		// 集群JnsGw的访问地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		JnsGwEndpoint *string `json:"JnsGwEndpoint,omitempty" name:"JnsGwEndpoint"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1561,13 +1615,6 @@ type ExistedInstance struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 
-	// 实例计费模式。取值范围：
-	// PREPAID：表示预付费，即包年包月
-	// POSTPAID_BY_HOUR：表示后付费，即按量计费
-	// CDHPAID：CDH付费，即只对CDH计费，不对CDH上的实例计费。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
-
 	// 实例的CPU核数，单位：核。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CPU *uint64 `json:"CPU,omitempty" name:"CPU"`
@@ -1583,6 +1630,14 @@ type ExistedInstance struct {
 	// 实例机型。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 伸缩组ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoscalingGroupId *string `json:"AutoscalingGroupId,omitempty" name:"AutoscalingGroupId"`
+
+	// 实例计费模式。取值范围： PREPAID：表示预付费，即包年包月 POSTPAID_BY_HOUR：表示后付费，即按量计费 CDHPAID：CDH付费，即只对CDH计费，不对CDH上的实例计费。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
 }
 
 type ExistedInstancesForNode struct {
@@ -1670,29 +1725,47 @@ type Instance struct {
 
 	// 添加时间
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 节点内网IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LanIP *string `json:"LanIP,omitempty" name:"LanIP"`
+
+	// 资源池ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+	// 自动伸缩组ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoscalingGroupId *string `json:"AutoscalingGroupId,omitempty" name:"AutoscalingGroupId"`
 }
 
 type InstanceAdvancedSettings struct {
 
 	// 数据盘挂载点, 默认不挂载数据盘. 已格式化的 ext3，ext4，xfs 文件系统的数据盘将直接挂载，其他文件系统或未格式化的数据盘将自动格式化为ext4 并挂载，请注意备份数据! 无数据盘或有多块数据盘的云主机此设置不生效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	MountTarget *string `json:"MountTarget,omitempty" name:"MountTarget"`
 
 	// dockerd --graph 指定值, 默认为 /var/lib/docker
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DockerGraphPath *string `json:"DockerGraphPath,omitempty" name:"DockerGraphPath"`
 
 	// base64 编码的用户脚本, 此脚本会在 k8s 组件运行后执行, 需要用户保证脚本的可重入及重试逻辑, 脚本及其生成的日志文件可在节点的 /data/ccs_userscript/ 路径查看, 如果要求节点需要在进行初始化完成后才可加入调度, 可配合 unschedulable 参数使用, 在 userScript 最后初始化完成后, 添加 kubectl uncordon nodename --kubeconfig=/root/.kube/config 命令使节点加入调度
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserScript *string `json:"UserScript,omitempty" name:"UserScript"`
 
 	// 设置加入的节点是否参与调度，默认值为0，表示参与调度；非0表示不参与调度, 待节点初始化完成之后, 可执行kubectl uncordon nodename使node加入调度.
 	Unschedulable *int64 `json:"Unschedulable,omitempty" name:"Unschedulable"`
 
 	// 节点Label数组
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Labels []*Label `json:"Labels,omitempty" name:"Labels" list`
 
 	// 数据盘相关信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks" list`
 
 	// 节点相关的自定义参数信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
 }
 
@@ -1893,6 +1966,15 @@ type RegionInstance struct {
 	// 地域白名单
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type ResourceDeleteOption struct {
+
+	// 资源类型，例如CBS
+	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
+
+	// 集群删除时资源的删除模式：terminate（销毁），retain （保留）
+	DeleteMode *string `json:"DeleteMode,omitempty" name:"DeleteMode"`
 }
 
 type RouteInfo struct {

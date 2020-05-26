@@ -148,7 +148,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	name := d.Get("name").(string)
 	projectId := d.Get("project_id").(int)
@@ -179,8 +179,10 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 
 func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -291,7 +293,7 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -375,7 +377,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	createTimeStr := d.Get("create_time").(string)

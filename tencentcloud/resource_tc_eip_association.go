@@ -93,7 +93,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip_association.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -211,8 +211,10 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip_association.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -252,7 +254,7 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip_association.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

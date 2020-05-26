@@ -165,7 +165,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	attachmentId := d.Id()
 
@@ -209,7 +209,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
@@ -323,9 +323,10 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), "#")
 	locationId := items[0]

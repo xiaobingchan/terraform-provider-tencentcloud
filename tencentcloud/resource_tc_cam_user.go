@@ -223,7 +223,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	_ = d.Set("secret_id", *response.Response.SecretId)
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -247,9 +247,10 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 
 func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_user.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	deleteForce := false
 	if v, ok := d.GetOkExists("force_delete"); ok {

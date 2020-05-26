@@ -163,7 +163,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_mongodb_instance.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	mongodbService := MongodbService{client: client}
@@ -278,9 +278,10 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 
@@ -350,7 +351,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_mongodb_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 
@@ -464,7 +465,7 @@ func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_mongodb_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
 	mongodbService := MongodbService{

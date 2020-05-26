@@ -7,6 +7,7 @@ import (
 	"log"
 
 	cdn "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdn/v20180606"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -29,6 +30,11 @@ func (me *CdnService) DescribeDomainsConfigByDomain(ctx context.Context, domain 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCdnClient().DescribeDomainsConfig(request)
 	if err != nil {
+		if sdkErr, ok := err.(*errors.TceCloudSDKError); ok {
+			if sdkErr.Code == CDN_HOST_NOT_FOUND {
+				return
+			}
+		}
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err

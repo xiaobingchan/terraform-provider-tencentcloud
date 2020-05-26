@@ -168,7 +168,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	d.SetId(strconv.Itoa(int(*response.Response.PolicyId)))
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	policyId := d.Id()
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -191,9 +191,10 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	policyId := d.Id()
 	camService := CamService{

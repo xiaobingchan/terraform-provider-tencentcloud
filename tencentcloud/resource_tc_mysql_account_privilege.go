@@ -9,9 +9,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_account_privilege" "default" {
-  mysql_id = "my-test-database"
-  account_name= "tf_account"
-  privileges = ["SELECT"]
+  mysql_id       = "my-test-database"
+  account_name   = "tf_account"
+  privileges     = ["SELECT"]
   database_names = ["instance.name"]
 }
 ```
@@ -115,9 +115,10 @@ func resourceTencentCloudMysqlAccountPrivilegeCreate(d *schema.ResourceData, met
 
 func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var privilegeId resourceTencentCloudMysqlAccountPrivilegeId
 
@@ -232,7 +233,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -311,7 +312,7 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 

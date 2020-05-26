@@ -290,7 +290,7 @@ func NewCreateTargetGroupResponse() (response *CreateTargetGroupResponse) {
     return
 }
 
-// 创建目标组。（目标组功能正在灰度中，需要开通白名单支持）
+// 创建目标组。该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
 func (c *Client) CreateTargetGroup(request *CreateTargetGroupRequest) (response *CreateTargetGroupResponse, err error) {
     if request == nil {
         request = NewCreateTargetGroupRequest()
@@ -1396,6 +1396,31 @@ func (c *Client) ReplaceCertForLoadBalancers(request *ReplaceCertForLoadBalancer
         request = NewReplaceCertForLoadBalancersRequest()
     }
     response = NewReplaceCertForLoadBalancersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetLoadBalancerClsLogRequest() (request *SetLoadBalancerClsLogRequest) {
+    request = &SetLoadBalancerClsLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "SetLoadBalancerClsLog")
+    return
+}
+
+func NewSetLoadBalancerClsLogResponse() (response *SetLoadBalancerClsLogResponse) {
+    response = &SetLoadBalancerClsLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 增加、删除、更新负载均衡的日志服务(CLS)主题
+func (c *Client) SetLoadBalancerClsLog(request *SetLoadBalancerClsLogRequest) (response *SetLoadBalancerClsLogResponse, err error) {
+    if request == nil {
+        request = NewSetLoadBalancerClsLogRequest()
+    }
+    response = NewSetLoadBalancerClsLogResponse()
     err = c.Send(request, response)
     return
 }
