@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a policy group resource for monitor.
 

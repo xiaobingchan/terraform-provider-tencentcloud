@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query monitor data. for complex queries, use (https://github.com/tencentyun/tencentcloud-exporter)
 

@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource for bind objects to a policy group resource.
 

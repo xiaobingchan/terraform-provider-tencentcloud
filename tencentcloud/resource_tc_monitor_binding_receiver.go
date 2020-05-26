@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a resource for bind receivers to a policy group resource.
 

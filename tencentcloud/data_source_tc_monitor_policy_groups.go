@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query monitor policy groups (There is a lot of data and it is recommended to output to a file)
 

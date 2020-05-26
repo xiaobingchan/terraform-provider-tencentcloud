@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query product namespace in monitor)
 
