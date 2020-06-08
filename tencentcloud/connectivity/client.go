@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	as "github.com/tencentyun/tcecloud-sdk-go/tcecloud/as/v20180419"
-	//cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
+	cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
 	cbs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cbs/v20170312"
 	sts "github.com/tencentyun/tcecloud-sdk-go/tcecloud/sts/v20180813"
 	//cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
@@ -26,7 +26,7 @@ import (
 	monitor "github.com/tencentyun/tcecloud-sdk-go/tcecloud/monitor/v20180724"
 	redis "github.com/tencentyun/tcecloud-sdk-go/tcecloud/redis/v20180412"
 	//scf "github.com/tencentyun/tcecloud-sdk-go/tcecloud/scf/v20180416"
-	tag "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tag/v20200518"
+	tag "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tag/v20180813"
 	//tcaplusdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tcaplusdb/v20190823"
 	tke "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tke/v20180525"
 	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
@@ -54,7 +54,7 @@ type TencentCloudClient struct {
 	//mongodbConn *mongodb.Client
 	tkeConn *tke.Client
 	stsConn *sts.Client
-	//camConn     *cam.Client
+	camConn *cam.Client
 	//gaapConn    *gaap.Client
 	//sslConn     *ssl.Client
 	cfsConn *cfs.Client
@@ -282,7 +282,7 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	return me.sslConn
 }
 */
-/*
+
 // UseCamClient returns cam client for service
 func (me *TencentCloudClient) UseCamClient() *cam.Client {
 	if me.camConn != nil {
@@ -295,7 +295,6 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 
 	return me.camConn
 }
-*/
 
 // UseStsClient returns sts client for service
 func (me *TencentCloudClient) UseStsClient() *sts.Client {
