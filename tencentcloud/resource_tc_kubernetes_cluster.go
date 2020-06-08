@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provide a resource to create a kubernetes cluster.
 

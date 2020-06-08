@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	cbs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cbs/v20170312"
@@ -420,18 +421,21 @@ func (me *CbsService) UnattachSnapshotPolicy(ctx context.Context, diskId, policy
 }
 
 func (me *CbsService) ModifyDiskChargeType(ctx context.Context, storageId string, chargeType string, renewFlag string, period int) error {
-	logId := getLogId(ctx)
-	request := cbs.NewModifyDisksChargeTypeRequest()
-	request.DiskIds = []*string{&storageId}
-	request.DiskChargePrepaid = &cbs.DiskChargePrepaid{Period: helper.IntUint64(period), RenewFlag: &renewFlag}
-	ratelimit.Check(request.GetAction())
-	_, err := me.client.UseCbsClient().ModifyDisksChargeType(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	}
-	return nil
+	return fmt.Errorf("modify disks charge type is not supported.")
+	/*
+		logId := getLogId(ctx)
+		request := cbs.NewModifyDisksChargeTypeRequest()
+		request.DiskIds = []*string{&storageId}
+		request.DiskChargePrepaid = &cbs.DiskChargePrepaid{Period: helper.IntUint64(period), RenewFlag: &renewFlag}
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseCbsClient().ModifyDisksChargeType(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return err
+		}
+		return nil
+	*/
 }
 
 func (me *CbsService) ModifyDisksRenewFlag(ctx context.Context, storageId string, renewFlag string) error {

@@ -370,6 +370,10 @@ VPN
 package tencentcloud
 
 import (
+	"net/url"
+	"os"
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
@@ -513,12 +517,12 @@ func Provider() terraform.ResourceProvider {
 				"tencentcloud_dc_gateway_instances":         dataSourceTencentCloudDcGatewayInstances(),
 				"tencentcloud_dc_gateway_ccn_routes":        dataSourceTencentCloudDcGatewayCCNRoutes(),
 			*/
-			"tencentcloud_security_group":              dataSourceTencentCloudSecurityGroup(),
-			"tencentcloud_security_groups":             dataSourceTencentCloudSecurityGroups(),
-			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
-			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
-			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
+			"tencentcloud_security_group":  dataSourceTencentCloudSecurityGroup(),
+			"tencentcloud_security_groups": dataSourceTencentCloudSecurityGroups(),
 			/*
+				"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
+				"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
+				"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
 				"tencentcloud_mysql_backup_list":            dataSourceTencentMysqlBackupList(),
 				"tencentcloud_mysql_zone_config":            dataSourceTencentMysqlZoneConfig(),
 				"tencentcloud_mysql_parameter_list":         dataSourceTencentCloudMysqlParameterList(),
@@ -638,14 +642,12 @@ func Provider() terraform.ResourceProvider {
 				"tencentcloud_clb_listener_rule":             resourceTencentCloudClbListenerRule(),
 				"tencentcloud_clb_attachment":                resourceTencentCloudClbServerAttachment(),
 				"tencentcloud_clb_redirection":               resourceTencentCloudClbRedirection(),
-			*/
-			"tencentcloud_container_cluster":             resourceTencentCloudContainerCluster(),
-			"tencentcloud_container_cluster_instance":    resourceTencentCloudContainerClusterInstance(),
-			"tencentcloud_kubernetes_cluster":            resourceTencentCloudTkeCluster(),
-			"tencentcloud_kubernetes_as_scaling_group":   ResourceTencentCloudKubernetesAsScalingGroup(),
-			"tencentcloud_kubernetes_scale_worker":       resourceTencentCloudTkeScaleWorker(),
-			"tencentcloud_kubernetes_cluster_attachment": resourceTencentCloudTkeClusterAttachment(),
-			/*
+				"tencentcloud_container_cluster":             resourceTencentCloudContainerCluster(),
+				"tencentcloud_container_cluster_instance":    resourceTencentCloudContainerClusterInstance(),
+				"tencentcloud_kubernetes_cluster":            resourceTencentCloudTkeCluster(),
+				"tencentcloud_kubernetes_as_scaling_group":   ResourceTencentCloudKubernetesAsScalingGroup(),
+				"tencentcloud_kubernetes_scale_worker":       resourceTencentCloudTkeScaleWorker(),
+				"tencentcloud_kubernetes_cluster_attachment": resourceTencentCloudTkeClusterAttachment(),
 				"tencentcloud_mysql_backup_policy":           resourceTencentCloudMysqlBackupPolicy(),
 				"tencentcloud_mysql_account":                 resourceTencentCloudMysqlAccount(),
 				"tencentcloud_mysql_account_privilege":       resourceTencentCloudMysqlAccountPrivilege(),

@@ -9,9 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	as "github.com/tencentyun/tcecloud-sdk-go/tcecloud/as/v20180419"
-
 	//cam "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cam/v20190116"
 	cbs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cbs/v20170312"
+	sts "github.com/tencentyun/tcecloud-sdk-go/tcecloud/sts/v20180813"
 	//cdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdb/v20170320"
 	//cdn "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cdn/v20180606"
 	cfs "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cfs/v20190719"
@@ -19,21 +19,18 @@ import (
 	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
 	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common/profile"
 	cvm "github.com/tencentyun/tcecloud-sdk-go/tcecloud/cvm/v20170312"
-
 	//dayu "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dayu/v20180709"
 	dc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/dc/v20180410"
 	//gaap "github.com/tencentyun/tcecloud-sdk-go/tcecloud/gaap/v20180529"
 	//mongodb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/mongodb/v20180408"
 	monitor "github.com/tencentyun/tcecloud-sdk-go/tcecloud/monitor/v20180724"
 	redis "github.com/tencentyun/tcecloud-sdk-go/tcecloud/redis/v20180412"
-
 	//scf "github.com/tencentyun/tcecloud-sdk-go/tcecloud/scf/v20180416"
-	//tag "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tag/v20180813"
+	tag "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tag/v20200518"
 	//tcaplusdb "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tcaplusdb/v20190823"
 	tke "github.com/tencentyun/tcecloud-sdk-go/tcecloud/tke/v20180525"
 	vpc "github.com/tencentyun/tcecloud-sdk-go/tcecloud/vpc/v20170312"
 	//ssl "github.com/tencentyun/tcecloud-sdk-go/tcecloud/wss/v20180426"
-	//sts "github.com/tencentyun/tcecloud-sdk-go/tcecloud/sts/v20180813"
 )
 
 // TencentCloudClient is client for all TencentCloud service
@@ -52,11 +49,11 @@ type TencentCloudClient struct {
 	cvmConn   *cvm.Client
 	clbConn   *clb.Client
 	//dayuConn    *dayu.Client
-	dcConn *dc.Client
-	//tagConn     *tag.Client
+	dcConn  *dc.Client
+	tagConn *tag.Client
 	//mongodbConn *mongodb.Client
 	tkeConn *tke.Client
-	//stsConn *sts.Client
+	stsConn *sts.Client
 	//camConn     *cam.Client
 	//gaapConn    *gaap.Client
 	//sslConn     *ssl.Client
@@ -231,7 +228,6 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 	return me.cvmConn
 }
 
-/*
 // UseTagClient returns tag client for service
 func (me *TencentCloudClient) UseTagClient() *tag.Client {
 	if me.tagConn != nil {
@@ -244,7 +240,7 @@ func (me *TencentCloudClient) UseTagClient() *tag.Client {
 
 	return me.tagConn
 }
-*/
+
 // UseTkeClient returns tke client for service
 func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	if me.tkeConn != nil {
@@ -300,15 +296,15 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 	return me.camConn
 }
 */
-/*
+
 // UseStsClient returns sts client for service
 func (me *TencentCloudClient) UseStsClient() *sts.Client {
-	/-*
+	/*
 		me.Credential will changed, don't cache it
 		if me.stsConn != nil {
 			return me.stsConn
 		}
-	*-/
+	*/
 
 	cpf := me.NewClientProfile(300)
 	me.stsConn, _ = sts.NewClient(me.Credential, me.Region, cpf)
@@ -316,7 +312,7 @@ func (me *TencentCloudClient) UseStsClient() *sts.Client {
 
 	return me.stsConn
 }
-*/
+
 // UseCfsClient returns cfs client for service
 func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
 	if me.cfsConn != nil {

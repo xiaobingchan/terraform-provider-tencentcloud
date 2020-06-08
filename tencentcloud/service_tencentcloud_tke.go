@@ -528,6 +528,7 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 /*
   for MANAGED_CLUSTER open internet access
 */
+/*
 func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id string, securityPolicies []string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -580,10 +581,11 @@ func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id s
 	message = *response.Response.ErrorMsg
 	return
 }
-
+*/
 /*
   for INDEPENDENT_CLUSTER open internet access
 */
+/*
 func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId string, internet bool) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -697,7 +699,7 @@ func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, se
 	}
 	return
 }
-
+*/
 func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeImagesRequest()

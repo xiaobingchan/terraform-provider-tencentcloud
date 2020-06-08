@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Get all instances of the specific cluster.
 

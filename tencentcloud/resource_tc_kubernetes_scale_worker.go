@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provide a resource to increase instance to cluster
 

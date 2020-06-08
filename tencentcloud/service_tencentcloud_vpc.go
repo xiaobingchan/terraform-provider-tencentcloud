@@ -1728,6 +1728,7 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *v
 	eip = response.Response.AddressSet[0]
 	return
 }
+*/
 
 func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[string][]string) (eips []*vpc.Address, errRet error) {
 	logId := getLogId(ctx)
@@ -1759,6 +1760,7 @@ func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[strin
 	return
 }
 
+/*
 func (me *VpcService) ModifyEipName(ctx context.Context, eipId, eipName string) error {
 	logId := getLogId(ctx)
 	request := vpc.NewModifyAddressAttributeRequest()

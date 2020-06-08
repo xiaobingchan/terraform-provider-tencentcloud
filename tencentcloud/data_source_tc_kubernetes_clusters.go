@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Use this data source to query detailed information of kubernetes clusters.
 

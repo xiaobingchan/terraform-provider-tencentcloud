@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides a TencentCloud Container Cluster Instance resource.
 

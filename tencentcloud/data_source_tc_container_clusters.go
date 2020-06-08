@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Get container clusters in the current region.
 

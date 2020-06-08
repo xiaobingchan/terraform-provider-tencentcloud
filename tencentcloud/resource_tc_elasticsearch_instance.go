@@ -1,3 +1,5 @@
+// +build tencentcloud
+
 /*
 Provides an elasticsearch instance resource.
 
