@@ -1,7 +1,7 @@
 // +build tencentcloud
 
 /*
-Use this resource to create tcaplus table group
+Use this resource to create TcaplusDB table group.
 
 Example Usage
 
@@ -15,9 +15,9 @@ resource "tencentcloud_tcaplus_cluster" "test" {
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 ```
 */
@@ -32,24 +32,24 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourceTencentCloudTcaplusGroup() *schema.Resource {
+func resourceTencentCloudTcaplusTableGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTcaplusGroupCreate,
-		Read:   resourceTencentCloudTcaplusGroupRead,
-		Update: resourceTencentCloudTcaplusGroupUpdate,
-		Delete: resourceTencentCloudTcaplusGroupDelete,
+		Create: resourceTencentCloudTcaplusTableGroupCreate,
+		Read:   resourceTencentCloudTcaplusTableGroupRead,
+		Update: resourceTencentCloudTcaplusTableGroupUpdate,
+		Delete: resourceTencentCloudTcaplusTableGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Cluster of the tcaplus group belongs.",
+				Description: "Id of the TcaplusDB cluster to which the table group belongs.",
 			},
-			"group_name": {
+			"tablegroup_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
-				Description:  "Name of the tcaplus group. length should between 1 and 30.",
+				Description:  "Name of the TcaplusDB table group. Name length should be between 1 and 30.",
 			},
 			// Computed values.
 			"table_count": {
@@ -60,19 +60,19 @@ func resourceTencentCloudTcaplusGroup() *schema.Resource {
 			"total_size": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "The total storage(MB).",
+				Description: "Total storage size (MB).",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the tcaplus group.",
+				Description: "Create time of the TcaplusDB table group.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudTcaplusGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_group.create")()
+func resourceTencentCloudTcaplusTableGroupCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.create")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -81,18 +81,18 @@ func resourceTencentCloudTcaplusGroupCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		clusterId = d.Get("cluster_id").(string)
-		groupName = d.Get("group_name").(string)
+		groupName = d.Get("tablegroup_name").(string)
 	)
 	groupId, err := tcaplusService.CreateGroup(ctx, clusterId, groupName)
 	if err != nil {
 		return err
 	}
 	d.SetId(fmt.Sprintf("%s:%s", clusterId, groupId))
-	return resourceTencentCloudTcaplusGroupRead(d, meta)
+	return resourceTencentCloudTcaplusTableGroupRead(d, meta)
 }
 
-func resourceTencentCloudTcaplusGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_group.read")()
+func resourceTencentCloudTcaplusTableGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -121,7 +121,7 @@ func resourceTencentCloudTcaplusGroupRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
-	_ = d.Set("group_name", info.TableGroupName)
+	_ = d.Set("tablegroup_name", info.TableGroupName)
 	_ = d.Set("table_count", int(*info.TableCount))
 	_ = d.Set("total_size", int(*info.TotalSize))
 	_ = d.Set("create_time", info.CreatedTime)
@@ -129,8 +129,8 @@ func resourceTencentCloudTcaplusGroupRead(d *schema.ResourceData, meta interface
 	return nil
 }
 
-func resourceTencentCloudTcaplusGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_group.update")()
+func resourceTencentCloudTcaplusTableGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -140,9 +140,9 @@ func resourceTencentCloudTcaplusGroupUpdate(d *schema.ResourceData, meta interfa
 	clusterId := d.Get("cluster_id").(string)
 	groupId := d.Id()
 
-	if d.HasChange("group_name") {
+	if d.HasChange("tablegroup_name") {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := tcaplusService.ModifyGroupName(ctx, clusterId, groupId, d.Get("group_name").(string))
+			err := tcaplusService.ModifyGroupName(ctx, clusterId, groupId, d.Get("tablegroup_name").(string))
 			if err != nil {
 				return retryError(err)
 			}
@@ -152,11 +152,11 @@ func resourceTencentCloudTcaplusGroupUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 	}
-	return resourceTencentCloudTcaplusGroupRead(d, meta)
+	return resourceTencentCloudTcaplusTableGroupRead(d, meta)
 }
 
-func resourceTencentCloudTcaplusGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_group.delete")()
+func resourceTencentCloudTcaplusTableGroupDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

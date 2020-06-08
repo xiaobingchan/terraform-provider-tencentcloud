@@ -188,7 +188,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 	if payType == MysqlPayByMonth {
 		err := mysqlCreateReadonlyInstancePayByMonth(ctx, d, meta)
 		if err != nil {
@@ -267,14 +267,9 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	d.Partial(true)
-
-	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
-	if err != nil {
-		return err
-	}
 
 	if payType == MysqlPayByMonth {
 		if d.HasChange("auto_renew_flag") {
@@ -285,6 +280,10 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 			}
 			d.SetPartial("auto_renew_flag")
 		}
+	}
+	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
+	if err != nil {
+		return err
 	}
 
 	d.Partial(false)
@@ -299,11 +298,22 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+		if err != nil {
+			//for the pay order wait
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
+
 	var hasDeleted = false
+	payType := getPayType(d).(int)
+	forceDelete := d.Get("force_delete").(bool)
 
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
@@ -335,11 +345,13 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	if err != nil {
 		return err
 	}
+	if payType == MysqlPayByMonth && !forceDelete {
+		return nil
+	}
 
 	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
 	if err == nil {
 		log.Printf("[WARN]this mysql is readonly instance, it is released asynchronously, and the bound resource is not now fully released now\n")
 	}
-
 	return err
 }

@@ -33,6 +33,7 @@ provider "tencentcloud" {
 Resources List
 
 Provider Data Sources
+  tencentcloud_availability_regions
   tencentcloud_availability_zones
 
 Anti-DDoS(Dayu)
@@ -203,6 +204,13 @@ Direct Connect Gateway(DCG)
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
 
+Elasticsearch
+  Data Source
+    tencentcloud_elasticsearch_instances
+
+  Resource
+    tencentcloud_elasticsearch_instance
+
 Global Application Acceleration(GAAP)
   Data Source
     tencentcloud_gaap_certificates
@@ -307,11 +315,11 @@ TcaplusDB
     tencentcloud_tcaplus_clusters
     tencentcloud_tcaplus_idls
     tencentcloud_tcaplus_tables
-    tencentcloud_tcaplus_groups
+    tencentcloud_tcaplus_tablegroups
 
   Resource
     tencentcloud_tcaplus_cluster
-    tencentcloud_tcaplus_group
+    tencentcloud_tcaplus_tablegroup
     tencentcloud_tcaplus_idl
     tencentcloud_tcaplus_table
 
@@ -364,6 +372,11 @@ package tencentcloud
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentyun/tcecloud-sdk-go/tcecloud/common"
+	sts "github.com/tencentyun/tcecloud-sdk-go/tcecloud/sts/v20180813"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 const (
@@ -371,10 +384,16 @@ const (
 	PROVIDER_SECRET_KEY                   = "TENCENTCLOUD_SECRET_KEY"
 	PROVIDER_SECURITY_TOKEN               = "TENCENTCLOUD_SECURITY_TOKEN"
 	PROVIDER_REGION                       = "TENCENTCLOUD_REGION"
+	PROVIDER_PROTOCOL                     = "TENCENTCLOUD_PROTOCOL"
+	PROVIDER_DOMAIN                       = "TENCENTCLOUD_DOMAIN"
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
 )
+
+type TencentCloudClient struct {
+	apiV3Conn *connectivity.TencentCloudClient
+}
 
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
@@ -405,6 +424,19 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_REGION, nil),
 				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 				InputDefault: "ap-guangzhou",
+			},
+			"protocol": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_PROTOCOL, "HTTPS"),
+				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
+				Description:  "The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.",
+			},
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
+				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
 			},
 			"assume_role": {
 				Type:        schema.TypeSet,
@@ -443,8 +475,8 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"tencentcloud_availability_zones": dataSourceTencentCloudAvailabilityZones(),
-			"tencentcloud_instances":          dataSourceTencentCloudInstances(),
+			"tencentcloud_availability_regions": dataSourceTencentCloudAvailabilityRegions(),
+			"tencentcloud_availability_zones":   dataSourceTencentCloudAvailabilityZones(),
 			/*
 				"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
 			*/
@@ -555,6 +587,7 @@ func Provider() terraform.ResourceProvider {
 				"tencentcloud_monitor_binding_objects":      dataSourceTencentMonitorBindingObjects(),
 				"tencentcloud_monitor_policy_groups":        dataSourceTencentMonitorPolicyGroups(),
 				"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
+				"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
 			*/
 		},
 
@@ -676,6 +709,7 @@ func Provider() terraform.ResourceProvider {
 				"tencentcloud_monitor_policy_group":        resourceTencentMonitorPolicyGroup(),
 				"tencentcloud_monitor_binding_object":      resourceTencentMonitorBindingObject(),
 				"tencentcloud_monitor_binding_receiver":    resourceTencentMonitorBindingAlarmReceiver(),
+				"tencentcloud_elasticsearch_instance":         resourceTencentCloudElasticsearchInstance(),
 			*/
 		},
 
@@ -688,68 +722,63 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	secretKey := d.Get("secret_key").(string)
 	securityToken := d.Get("security_token").(string)
 	region := d.Get("region").(string)
-	/*
-		//assume arn
-		assumeRoleList := d.Get("assume_role").(*schema.Set).List()
-		if len(assumeRoleList) == 1 {
-			assumeRole := assumeRoleList[0].(map[string]interface{})
-			assumeRoleArn := assumeRole["role_arn"].(string)
-			assumeRoleSessionName := assumeRole["session_name"].(string)
-			assumeRoleSessionDuration := assumeRole["session_duration"].(int)
-			assumeRolePolicy := assumeRole["policy"].(string)
-			if assumeRoleSessionDuration == 0 {
-				var err error
-				if duration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); duration != "" {
-					assumeRoleSessionDuration, err = strconv.Atoi(duration)
-					if err != nil {
-						return nil, err
-					}
-					if assumeRoleSessionDuration == 0 {
-						assumeRoleSessionDuration = 7200
-					}
-				}
-			}
-			//applying STS credentials
-			request := sts.NewAssumeRoleRequest()
-			request.RoleArn = helper.String(assumeRoleArn)
-			request.RoleSessionName = helper.String(assumeRoleSessionName)
-			request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
 
-			if assumeRolePolicy != "" {
-				//urlencode policy
-				request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
-			}
+	protocol := d.Get("protocol").(string)
+	domain := d.Get("domain").(string)
 
-			cpf := con.NewTencentCloudClientProfile(300)
-			//send request
-			credential := common.NewTokenCredential(
-				secretId,
-				secretKey,
-				securityToken,
-			)
-
-			client, err := sts.NewClient(credential, region, cpf)
-			if err != nil {
-				return nil, err
-			}
-			ratelimit.Check(request.GetAction())
-			response, err := client.AssumeRole(request)
-			if err != nil {
-				return nil, err
-			}
-
-			//set assume role
-			secretId = *response.Response.Credentials.TmpSecretId
-			secretKey = *response.Response.Credentials.TmpSecretKey
-			securityToken = *response.Response.Credentials.Token
-		}
-	*/
-	config := Config{
-		SecretId:      secretId,
-		SecretKey:     secretKey,
-		SecurityToken: securityToken,
-		Region:        region,
+	// standard client
+	var tcClient TencentCloudClient
+	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
+		Credential: common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		),
+		Region:   region,
+		Protocol: protocol,
+		Domain:   domain,
 	}
 
-	return config.Client()
+	// assume role client
+	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
+	if len(assumeRoleList) == 1 {
+		assumeRole := assumeRoleList[0].(map[string]interface{})
+		assumeRoleArn := assumeRole["role_arn"].(string)
+		assumeRoleSessionName := assumeRole["session_name"].(string)
+		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
+		assumeRolePolicy := assumeRole["policy"].(string)
+		if assumeRoleSessionDuration == 0 {
+			var err error
+			if duration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); duration != "" {
+				assumeRoleSessionDuration, err = strconv.Atoi(duration)
+				if err != nil {
+					return nil, err
+				}
+				if assumeRoleSessionDuration == 0 {
+					assumeRoleSessionDuration = 7200
+				}
+			}
+		}
+		// applying STS credentials
+		request := sts.NewAssumeRoleRequest()
+		request.RoleArn = helper.String(assumeRoleArn)
+		request.RoleSessionName = helper.String(assumeRoleSessionName)
+		request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
+		if assumeRolePolicy != "" {
+			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
+		}
+		ratelimit.Check(request.GetAction())
+		response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
+		if err != nil {
+			return nil, err
+		}
+		// using STS credentials
+		tcClient.apiV3Conn.Credential = common.NewTokenCredential(
+			*response.Response.Credentials.TmpSecretId,
+			*response.Response.Credentials.TmpSecretKey,
+			*response.Response.Credentials.Token,
+		)
+	}
+
+	return &tcClient, nil
 }
