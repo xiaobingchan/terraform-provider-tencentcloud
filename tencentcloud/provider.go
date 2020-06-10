@@ -481,6 +481,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_regions": dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_availability_zones":   dataSourceTencentCloudAvailabilityZones(),
+			"tencentcloud_instances":            dataSourceTencentCloudInstances(),
 			/*
 				"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
 			*/
@@ -520,9 +521,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_security_group":  dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_groups": dataSourceTencentCloudSecurityGroups(),
 			/*
-				"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
-				"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
-				"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
+				"tencentcloud_kubernetes_clusters":          dataSourceTencentCloudKubernetesClusters(),
+				"tencentcloud_container_clusters":           dataSourceTencentCloudContainerClusters(),
+				"tencentcloud_container_cluster_instances":  dataSourceTencentCloudContainerClusterInstances(),
 				"tencentcloud_mysql_backup_list":            dataSourceTencentMysqlBackupList(),
 				"tencentcloud_mysql_zone_config":            dataSourceTencentMysqlZoneConfig(),
 				"tencentcloud_mysql_parameter_list":         dataSourceTencentCloudMysqlParameterList(),
@@ -582,7 +583,7 @@ func Provider() terraform.ResourceProvider {
 				"tencentcloud_scf_namespaces":               dataSourceTencentCloudScfNamespaces(),
 				"tencentcloud_scf_logs":                     dataSourceTencentCloudScfLogs(),
 				"tencentcloud_tcaplus_clusters":             dataSourceTencentCloudTcaplusClusters(),
-				"tencentcloud_tcaplus_groups":               dataSourceTencentCloudTcaplusGroups(),
+				"tencentcloud_tcaplus_tablegroups":          dataSourceTencentCloudTcaplusTableGroups(),
 				"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 				"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
 				"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
