@@ -10,13 +10,13 @@ the following must be changed to your resource id.
 const appid string = "1259649581"
 
 const (
-	defaultRegion      = "ap-guangzhou"
-	defaultVpcId       = "vpc-h70b6b49"
+	defaultRegion      = "chongqing"
+	defaultVpcId       = "vpc-kt6tj2vj"
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
-	defaultAZone          = "ap-guangzhou-3"
-	defaultSubnetId       = "subnet-1uwh63so"
+	defaultAZone          = "yf-1"
+	defaultSubnetId       = "subnet-0r6l8056"
 	defaultSubnetCidr     = "172.16.0.0/20"
 	defaultSubnetCidrLess = "172.16.0.0/22"
 
@@ -92,11 +92,6 @@ data "tencentcloud_images" "default" {
 }
 
 data "tencentcloud_instance_types" "default" {
-  filter {
-    name   = "instance-family"
-    values = ["S1"]
-  }
-
   cpu_core_count = 1
   memory_size    = 1
 }
@@ -110,8 +105,8 @@ resource "tencentcloud_instance" "default" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
-  allocate_public_ip         = true
-  internet_max_bandwidth_out = 10
+  allocate_public_ip         = false
+  internet_max_bandwidth_out = 0
   vpc_id                     = var.vpc_id
   subnet_id                  = var.subnet_id
 }

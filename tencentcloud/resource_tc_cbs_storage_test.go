@@ -24,7 +24,7 @@ func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_name", "tf-storage-basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "yf-1"),
 				),
 			},
 			{
@@ -52,7 +52,7 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_name", "tf-storage-full"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "yf-1"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "tags.test", "tf"),
@@ -64,7 +64,7 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_full"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_name", "tf-storage-update"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_size", "60"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "yf-1"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "tags.test", "tf-test"),
@@ -186,7 +186,7 @@ resource "tencentcloud_cbs_storage" "storage_basic" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-basic"
 	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 }
 `
 
@@ -195,7 +195,7 @@ resource "tencentcloud_cbs_storage" "storage_full" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-full"
 	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	project_id = 0
 	encrypt = false
 	tags = {
@@ -208,7 +208,7 @@ resource "tencentcloud_cbs_storage" "storage_full" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-update"
 	storage_size      = 60
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	project_id = 0
 	encrypt = false
 	tags = {
@@ -222,7 +222,7 @@ resource "tencentcloud_cbs_storage" "storage_prepaid" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-prepaid"
 	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	charge_type			= "PREPAID"
 	prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
 	prepaid_period = 1
@@ -242,7 +242,7 @@ resource "tencentcloud_cbs_storage" "storage_prepaid" {
 	charge_type			= "PREPAID"
 	prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 	prepaid_period = 1
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	project_id = 0
 	encrypt = false
 	tags = {
@@ -257,7 +257,7 @@ resource "tencentcloud_cbs_storage" "storage_upgrade" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-upgrade"
 	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 }
 `
 
@@ -266,7 +266,7 @@ resource "tencentcloud_cbs_storage" "storage_upgrade" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-upgrade"
 	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	charge_type			= "PREPAID"
 	prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 	prepaid_period = 1

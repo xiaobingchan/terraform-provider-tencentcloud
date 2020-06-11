@@ -23,7 +23,7 @@ func TestAccTencentCloudCbsStoragesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_name", "tf-test-storage"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_size", "50"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.availability_zone", "yf-1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.project_id", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.attached", "false"),
@@ -42,7 +42,7 @@ resource "tencentcloud_cbs_storage" "storage" {
   storage_type      = "CLOUD_PREMIUM"
   storage_name      = "tf-test-storage"
   storage_size      = 50
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = "yf-1"
   project_id        = 0
   encrypt           = false
   

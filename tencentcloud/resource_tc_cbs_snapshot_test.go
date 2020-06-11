@@ -91,7 +91,7 @@ func testAccCheckSnapshotExists(n string) resource.TestCheckFunc {
 
 const testAccCbsSnapshot = `
 resource "tencentcloud_cbs_storage" "storage" {
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	storage_size      = 50
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-test-storage"
@@ -105,7 +105,7 @@ resource "tencentcloud_cbs_snapshot" "snapshot" {
 
 const testAccCbsSnapshot_update = `
 resource "tencentcloud_cbs_storage" "storage" {
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "yf-1"
 	storage_size      = 50
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-test-storage"

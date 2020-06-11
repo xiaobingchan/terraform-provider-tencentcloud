@@ -23,7 +23,7 @@ func TestAccTencentCloudCbsSnapshotsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.snapshot_name", "tf-test-snapshot"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.storage_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.storage_size", "50"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.availability_zone", "yf-1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.percent"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.create_time"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_snapshots.snapshots", "snapshot_list.0.encrypt", "false"),
@@ -35,7 +35,7 @@ func TestAccTencentCloudCbsSnapshotsDataSource(t *testing.T) {
 
 const testAccCbsSnapshotsDataSource = `
 resource "tencentcloud_cbs_storage" "storage" {
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = "yf-1"
   storage_size      = 50
   storage_type      = "CLOUD_PREMIUM"
   storage_name      = "tf-test-storage"
