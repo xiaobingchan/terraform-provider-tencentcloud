@@ -16,7 +16,7 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.cpu_core_count", "4"),
 					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.memory_size", "8"),
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.availability_zone", "yf-1"),
 				),
 			},
 		},
@@ -25,7 +25,7 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 
 const testAccTencentCloudInstanceTypesDataSourceConfigBasic = `
 data "tencentcloud_instance_types" "t4c8g" {
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = "yf-1"
   cpu_core_count = 4
   memory_size    = 8
 }

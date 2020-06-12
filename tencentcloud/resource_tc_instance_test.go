@@ -588,7 +588,7 @@ resource "tencentcloud_instance" "foo" {
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 1
+  internet_max_bandwidth_out = 0
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -606,7 +606,7 @@ resource "tencentcloud_instance" "foo" {
   system_disk_type  = "CLOUD_PREMIUM"
   vpc_id            = var.vpc_id
   subnet_id         = var.subnet_id
-  private_ip        = "172.16.0.130"
+  private_ip        = "172.16.16.130"
 }
 `
 
@@ -639,7 +639,7 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_max_bandwidth_out = 1
+  internet_max_bandwidth_out = 0
   password                   = "%s"
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -711,7 +711,7 @@ resource "tencentcloud_instance" "foo" {
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
-  internet_max_bandwidth_out = 1
+  internet_max_bandwidth_out = 0
   security_groups            = %s
 }
 `,
