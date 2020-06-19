@@ -17,7 +17,7 @@ func TestAccDataSourceTencentCloudVpcV3Subnets_basic(t *testing.T) {
 					// id filter
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc_subnets.id_instances"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.id_instances", "instance_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.id_instances", "instance_list.0.availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.id_instances", "instance_list.0.availability_zone", "yf-1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.id_instances", "instance_list.0.name", "guagua_vpc_subnet_test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.id_instances", "instance_list.0.cidr_block", "10.0.20.0/28"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.id_instances", "instance_list.0.is_multicast", "false"),
@@ -84,7 +84,7 @@ func TestAccDataSourceTencentCloudVpcV3Subnets_basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudVpcSubnets = `
 variable "availability_zone" {
-  default = "ap-guangzhou-3"
+  default = "yf-1"
 }
 
 resource "tencentcloud_vpc" "foo" {
