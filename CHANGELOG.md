@@ -1,4 +1,17 @@
 ## 1.37.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_sqlserver_zone_config`
+
+## 1.36.1 (June 12, 2020)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `labels`.
+* Resource: `tencentcloud_kubernetes_as_scaling_group` add new argument `labels`.
+* Resource: `tencentcloud_cos_bucket` add new arguments `encryption_algorithm` and `versioning_enable`.
+
 ## 1.36.0 (June 08, 2020)
 
 FEATURES:

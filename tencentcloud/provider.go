@@ -303,6 +303,10 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_function
     tencentcloud_scf_namespace
 
+SQLServer
+  Data Source
+    tencentcloud_sqlserver_zone_config
+
 SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
@@ -593,6 +597,7 @@ func Provider() terraform.ResourceProvider {
 				"tencentcloud_monitor_policy_groups":        dataSourceTencentMonitorPolicyGroups(),
 				"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
 				"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
+				"tencentcloud_sqlserver_zone_config":        dataSourceTencentSqlserverZoneConfig(),
 			*/
 		},
 
